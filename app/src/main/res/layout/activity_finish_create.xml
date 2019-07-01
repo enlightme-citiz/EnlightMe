@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".FinishCreateActivity">
+    <!--Title possible answers-->
+    <TextView
+            android:text="@string/possible_answers_title"
+            android:id="@+id/possible_answers"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/head_line_text"
+            android:fontFamily="@font/roboto"/>
+    <!--Possible answers explanation paragraph-->
+    <TextView
+            android:text="@string/possible_answers_para"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/possible_answers_para"
+            style="@style/paragraph"
+            app:layout_constraintTop_toBottomOf="@+id/possible_answers"/>
+    <!--First possible answer-->
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="@dimen/input_field_height"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/side_1"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/side_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:hint="@string/hint_side_1" android:layout_marginTop="@dimen/space_1to2_level"
+            app:layout_constraintTop_toBottomOf="@+id/possible_answers_para"/>
+    <!--Second possible answer-->
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="@dimen/input_field_height"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/side_2"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/side_1"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:hint="@string/hint_side_2" android:layout_marginTop="@dimen/space_1to2_level"
+            app:layout_constraintTop_toBottomOf="@+id/possible_answers_para"/>
+
+    <!--Title to my nickname-->
+    <TextView
+            android:text="@string/pseudo_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pseudo_title"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            style="@style/head_line_text" android:layout_marginTop="@dimen/space_between_para"
+            app:layout_constraintTop_toBottomOf="@+id/side_1"/>
+    <!--Nickname input field-->
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="@dimen/input_field_height"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/pseudo2" android:hint="@string/hint_pseudo" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="@dimen/space_1to2_level"
+            app:layout_constraintTop_toBottomOf="@+id/pseudo_title" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/pseudo"/>
+    <!--Dummy nickname input field-->
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="@dimen/input_field_height"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/pseudo" android:hint="@string/hint_pseudo" android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/space_1to2_level"
+            app:layout_constraintTop_toBottomOf="@+id/pseudo_title" app:layout_constraintStart_toEndOf="@+id/pseudo2"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:visibility="invisible"/>
+    <!--Next-->
+    <com.google.android.material.button.MaterialButton
+            android:text="@string/nav_button_suivant"
+            style="@style/nav_button"
+            android:id="@+id/nav_button_suivant"
+            app:cornerRadius="25dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="58dp" app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

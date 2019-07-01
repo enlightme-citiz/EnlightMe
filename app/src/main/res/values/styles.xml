@@ -1,0 +1,47 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="nav_button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">309dp</item>
+        <item name="android:layout_height">51dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">sans</item>
+    </style>
+    <style name="head_line_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_top_value</item>
+        <item name="android:textSize">@dimen/head_line_text_size</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+    <style name="paragraph">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/full_width_margin</item>
+        <item name="android:layout_marginEnd">@dimen/full_width_margin</item>
+        <item name="android:layout_marginTop">@dimen/space_1to2_level</item>
+        <item name="android:textColor">@android:color/secondary_text_light</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+    <style name="side_header">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+</resources>
