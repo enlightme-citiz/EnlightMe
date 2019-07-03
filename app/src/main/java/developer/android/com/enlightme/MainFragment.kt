@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -45,6 +46,10 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentMainBinding>(inflater, R.layout.fragment_main, container, false)
         setHasOptionsMenu(true)
+        //Click listener to create fragment
+        binding.navButtonCreer.setOnClickListener { view : View ->
+            view.findNavController().navigate(R.id.action_mainFragment_to_create1Fragment)
+        }
         return binding.root
     }
 

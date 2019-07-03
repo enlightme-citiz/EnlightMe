@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/navigation"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/navigation"
             app:startDestination="@id/mainFragment">
-    <fragment android:id="@+id/mainFragment" android:name="developer.android.com.enlightme.MainFragment"
-              android:label="MainFragment"/>
+    <fragment android:id="@+id/mainFragment"
+              android:name="developer.android.com.enlightme.MainFragment"
+              android:label="MainFragment"
+              tools:layout="@layout/fragment_main">
+        <action android:id="@+id/action_mainFragment_to_create1Fragment"
+                app:destination="@id/createFragment"
+                app:popUpTo="@id/mainFragment"/>
+    </fragment>
+    <fragment android:id="@+id/createFragment"
+              android:name="developer.android.com.enlightme.Create1Fragment"
+              android:label="CreateFragment"
+              tools:layout="@layout/fragment_create1">
+        <action android:id="@+id/action_create1Fragment_to_create2Fragment"
+                app:destination="@id/create2Fragment"
+                app:popUpTo="@id/mainFragment"/>
+    </fragment>
+    <fragment android:id="@+id/create2Fragment"
+              android:name="developer.android.com.enlightme.Create2Fragment"
+              android:label="Create2Fragment"
+              tools:layout="@layout/fragment_create2"/>
 </navigation>

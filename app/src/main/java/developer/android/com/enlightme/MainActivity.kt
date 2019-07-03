@@ -11,7 +11,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import developer.android.com.enlightme.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionListener,
+Create1Fragment.OnFragmentInteractionListener,
+Create2Fragment.OnFragmentInteractionListener{
 
     private lateinit var binding: ActivityMainBinding
 
