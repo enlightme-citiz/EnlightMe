@@ -13,10 +13,6 @@
         </activity>
         <activity android:name=".DebateActivity">
         </activity>
-        <activity android:name=".LoadActivity">
-        </activity>
-        <activity android:name=".JoinActivity">
-        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
