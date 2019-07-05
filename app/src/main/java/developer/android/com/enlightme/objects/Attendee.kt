@@ -1,6 +1,9 @@
 package developer.android.com.enlightme.objects
 
-class attendee {
+class Attendee {
     // Class modeling people connected to the debate
-    lateinit var name : String
+    var name : String
+    constructor(name: String){
+        this.name = name
+    }
 }

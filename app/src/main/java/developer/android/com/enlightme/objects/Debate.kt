@@ -1,6 +1,9 @@
 package developer.android.com.enlightme.objects
 
 class Debate {
-    lateinit var listAttendees : MutableList<attendee>
+    var listAttendees : MutableList<Attendee>
     lateinit var debatEntity: DebatEntity
+    constructor(){
+        this.listAttendees = mutableListOf<Attendee>()
+    }
 }
