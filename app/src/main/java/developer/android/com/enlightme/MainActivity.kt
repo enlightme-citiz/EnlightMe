@@ -13,7 +13,8 @@ import developer.android.com.enlightme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionListener,
 Create1Fragment.OnFragmentInteractionListener,
-Create2Fragment.OnFragmentInteractionListener{
+Create2Fragment.OnFragmentInteractionListener,
+DebateFragment.OnFragmentInteractionListener{
 
     private lateinit var binding: ActivityMainBinding
 

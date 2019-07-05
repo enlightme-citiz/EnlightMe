@@ -7,30 +7,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [Create1Fragment.OnFragmentInteractionListener] interface
+ * [DebateFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [Create1Fragment.newInstance] factory method to
+ * Use the [DebateFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class Create1Fragment : Fragment() {
+class DebateFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var viewModel: DebateViewModel
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: DebateFragment.OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,16 +34,8 @@ class Create1Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentCreate1Binding>(inflater, R.layout.fragment_create1, container, false)
-        setHasOptionsMenu(true)
-        //Click listener to next view
-        viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
-        binding.navButtonSuivant.setOnClickListener{ view : View ->
-            viewModel.debateEntity.title = binding.debateQuestion.text.toString()
-            viewModel.debateEntity.description = binding.introNewDebat.text.toString()
-            view.findNavController().navigate(R.id.action_create1Fragment_to_create2Fragment)
-        }
-        return binding.root
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_debate, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -70,7 +56,6 @@ class Create1Fragment : Fragment() {
         super.onDetach()
         listener = null
     }
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -93,17 +78,13 @@ class Create1Fragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CreateFragment.
+         * @return A new instance of fragment DebateFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Create1Fragment().apply {
+        fun newInstance() =
+            DebateFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }

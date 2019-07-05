@@ -23,5 +23,10 @@
     <fragment android:id="@+id/create2Fragment"
               android:name="developer.android.com.enlightme.Create2Fragment"
               android:label="Create2Fragment"
-              tools:layout="@layout/fragment_create2"/>
+              tools:layout="@layout/fragment_create2">
+        <action android:id="@+id/action_create2Fragment_to_debateFragment" app:destination="@id/debateFragment"/>
+    </fragment>
+    <fragment android:id="@+id/debateFragment" android:name="developer.android.com.enlightme.DebateFragment"
+              android:label="DebateFragment"
+              tools:layout="@layout/fragment_debate"/>
 </navigation>

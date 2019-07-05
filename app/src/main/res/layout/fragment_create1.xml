@@ -32,7 +32,7 @@
                 android:layout_marginEnd="@dimen/full_width_margin"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="@dimen/full_width_margin"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="@dimen/space_1to2_level"
-                app:layout_constraintBottom_toTopOf="@+id/nav_button_charger" android:textSize="@dimen/base_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/nav_button_suivant" android:textSize="@dimen/base_text_size"
                 android:fontFamily="@font/roboto" android:textAlignment="textStart"
                 android:hint="@string/hint_intro_new_debat"/>
         <!--Load-->
