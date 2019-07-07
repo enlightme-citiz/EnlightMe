@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.fragment_main.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,6 +39,8 @@ class DebateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        this.populate_arguments()
         return inflater.inflate(R.layout.fragment_debate, container, false)
     }
 
@@ -87,5 +93,72 @@ class DebateFragment : Fragment() {
                 arguments = Bundle().apply {
                 }
             }
+    }
+
+
+    fun populate_arguments(){
+        viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        val fragMan = fragmentManager
+        val fragTransaction = fragMan?.beginTransaction()
+        // Filling side 1 with arguments
+        var top_elmt_id = R.id.side_1_arg_container
+        for((iarg_1, args_1) in viewModel.debateEntity.side_1_entity.withIndex()){
+            val arg_frag = ArgumentSide1Fragment().apply {
+                arguments = Bundle().apply {
+                    putString("title", args_1.title)
+                    putInt("idArg", args_1.idArg)
+                }
+            }
+            // Constraining wit the previous element
+            val constraintSet = ConstraintSet()
+            if (iarg_1 == 0){
+                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
+            }else{
+                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
+            }
+            constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
+            fragTransaction?.add(R.id.side_1_arg_container, arg_frag)
+            top_elmt_id = arg_frag.id
+        }
+        //Adding the button to enable adding argument
+        val arg_plus_frag_1 = ArgumentPlusSide1Fragment()
+        val constraintSet1 = ConstraintSet()
+        if (viewModel.debateEntity.side_1_entity.isEmpty()){
+            constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
+        }else{
+            constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
+        }
+        fragTransaction?.add(R.id.side_1_arg_container, arg_plus_frag_1)
+
+        // Filling side 2 with arguments
+        top_elmt_id = R.id.side_2_arg_container
+        for((iarg_2, args_2) in viewModel.debateEntity.side_2_entity.withIndex()){
+            val arg_frag = ArgumentSide2Fragment().apply {
+                arguments = Bundle().apply {
+                    putString("title", args_2.title)
+                    putInt("idArg", args_2.idArg)
+                }
+            }
+            // Constraining wit the previous element
+            val constraintSet = ConstraintSet()
+            if (iarg_2 == 0){
+                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
+            }else{
+                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
+            }
+            constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
+            fragTransaction?.add(R.id.side_1_arg_container, arg_frag)
+            top_elmt_id = arg_frag.id
+        }
+
+        //Adding the button to enable adding argument
+        val arg_plus_frag_2 = ArgumentPlusSide2Fragment()
+        val constraintSet2 = ConstraintSet()
+        if (viewModel.debateEntity.side_2_entity.isEmpty()){
+            constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
+        }else{
+            constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
+        }
+        fragTransaction?.add(R.id.side_2_arg_container, arg_plus_frag_2)?.commit()
     }
 }

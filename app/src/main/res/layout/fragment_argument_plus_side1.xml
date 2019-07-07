@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_marginStart="@dimen/shift_arg_out"
+             android:layout_marginTop="@dimen/space_1to2_level"
+             tools:context="developer.android.com.enlightme.MainActivity">
+        <LinearLayout
+                android:id="@+id/argument_plus"
+                android:layout_width="@dimen/argument_plus_width"
+                android:layout_height="@dimen/argument_plus_height"
+                android:background="@drawable/ripple_arg_plus_side_1"
+                android:orientation="horizontal" android:gravity="center|center_horizontal">
+                <LinearLayout
+                        android:background="@drawable/ic_add_white_24dp"
+                        android:layout_height="48dp"
+                        android:layout_width="48dp"
+                        android:layout_gravity="center" android:gravity="center" android:orientation="horizontal"/>
+        </LinearLayout>
+    <!-- End Custom Button -->
+</FrameLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:tools="http://schemas.android.com/tools"
+       xmlns:android="http://schemas.android.com/apk/res/android"
+       tools:ignore="ExtraText"
+       android:shape= "rectangle"
+       android:layout_height="@dimen/argument_plus_height"
+       android:layout_width="@dimen/argument_plus_width">
+
+    <corners
+            android:radius="@dimen/round_arg"/>
+    <solid
+            android:color="@color/side_2_face"
+    />
+
+</shape>

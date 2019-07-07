@@ -1,20 +1,21 @@
 package developer.android.com.enlightme
 
-import android.content.Context
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import developer.android.com.enlightme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionListener,
-Create1Fragment.OnFragmentInteractionListener,
-Create2Fragment.OnFragmentInteractionListener,
-DebateFragment.OnFragmentInteractionListener{
+    Create1Fragment.OnFragmentInteractionListener,
+    Create2Fragment.OnFragmentInteractionListener,
+    DebateFragment.OnFragmentInteractionListener,
+    ArgumentPlusSide1Fragment.OnFragmentInteractionListener,
+    ArgumentPlusSide2Fragment.OnFragmentInteractionListener,
+    ArgumentSide1Fragment.OnFragmentInteractionListener,
+    ArgumentSide2Fragment.OnFragmentInteractionListener{
 
     private lateinit var binding: ActivityMainBinding
 
