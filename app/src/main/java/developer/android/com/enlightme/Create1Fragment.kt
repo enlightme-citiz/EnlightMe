@@ -3,6 +3,7 @@ package developer.android.com.enlightme
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -43,10 +44,14 @@ class Create1Fragment : Fragment() {
         val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentCreate1Binding>(inflater, R.layout.fragment_create1, container, false)
         setHasOptionsMenu(true)
         //Click listener to next view
-        viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
-        binding.navButtonSuivant.setOnClickListener{ view : View ->
-            viewModel.debateEntity.title = binding.debateQuestion.text.toString()
-            viewModel.debateEntity.description = binding.introNewDebat.text.toString()
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
+        binding.suivantCreate1.setOnClickListener{ view : View ->
+            viewModel.debate.debateEntity.title = binding.debateQuestion.text.toString()
+            Log.i("Create1Fragment", binding.debateQuestion.text.toString())
+            Log.i("Create1Fragment", viewModel.debate.debateEntity.title)
+            viewModel.debate.debateEntity.description = binding.introNewDebat.text.toString()
             view.findNavController().navigate(R.id.action_create1Fragment_to_create2Fragment)
         }
         return binding.root

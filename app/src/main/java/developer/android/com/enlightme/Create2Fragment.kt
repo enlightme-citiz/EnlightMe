@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import developer.android.com.enlightme.objects.Attendee
+import kotlinx.android.synthetic.main.fragment_debate.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,10 +44,12 @@ class Create2Fragment : Fragment() {
         val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentCreate2Binding>(inflater, R.layout.fragment_create2, container, false)
         setHasOptionsMenu(true)
         //Click listener to next view
-        viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
-        binding.navButtonSuivant.setOnClickListener{ view : View ->
-            viewModel.debateEntity.side_1 = binding.side1.text.toString()
-            viewModel.debateEntity.side_2 = binding.side2.text.toString()
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
+        binding.suivantCreate2.setOnClickListener{ view : View ->
+            viewModel.debate.debateEntity.side_1 = binding.side1.text.toString()
+            viewModel.debate.debateEntity.side_2 = binding.side2.text.toString()
             //Creating attendee
             val user = Attendee(binding.pseudo.text.toString())
             viewModel.debate.listAttendees.add(user)

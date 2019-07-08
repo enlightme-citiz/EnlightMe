@@ -3,13 +3,16 @@ package developer.android.com.enlightme
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.fragment_debate.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -38,8 +41,19 @@ class DebateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentDebateBinding>(inflater, R.layout.fragment_debate, container, false)
         // Inflate the layout for this fragment
-        viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
+        Log.i("DebateFragment", viewModel.debate.debateEntity.title)
+        Log.i("DebateFragment", viewModel.debate.debateEntity.side_1)
+        Log.i("DebateFragment", viewModel.debate.debateEntity.side_2)
+        binding.debateQuestion.text = "test question"//viewModel.debate.debateEntity.title
+        binding.side1.text = viewModel.debate.debateEntity.side_1
+        binding.side2.text = viewModel.debate.debateEntity.side_2
+        Log.i("DebateFragment", binding.side1.text.toString())
+        Log.i("DebateFragment", binding.side2.text.toString())
         this.populate_arguments()
         return inflater.inflate(R.layout.fragment_debate, container, false)
     }
@@ -102,7 +116,7 @@ class DebateFragment : Fragment() {
         val fragTransaction = fragMan?.beginTransaction()
         // Filling side 1 with arguments
         var top_elmt_id = R.id.side_1_arg_container
-        for((iarg_1, args_1) in viewModel.debateEntity.side_1_entity.withIndex()){
+        for((iarg_1, args_1) in viewModel.debate.debateEntity.side_1_entity.withIndex()){
             val arg_frag = ArgumentSide1Fragment().apply {
                 arguments = Bundle().apply {
                     putString("title", args_1.title)
@@ -123,7 +137,7 @@ class DebateFragment : Fragment() {
         //Adding the button to enable adding argument
         val arg_plus_frag_1 = ArgumentPlusSide1Fragment()
         val constraintSet1 = ConstraintSet()
-        if (viewModel.debateEntity.side_1_entity.isEmpty()){
+        if (viewModel.debate.debateEntity.side_1_entity.isEmpty()){
             constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
         }else{
             constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
@@ -132,7 +146,7 @@ class DebateFragment : Fragment() {
 
         // Filling side 2 with arguments
         top_elmt_id = R.id.side_2_arg_container
-        for((iarg_2, args_2) in viewModel.debateEntity.side_2_entity.withIndex()){
+        for((iarg_2, args_2) in viewModel.debate.debateEntity.side_2_entity.withIndex()){
             val arg_frag = ArgumentSide2Fragment().apply {
                 arguments = Bundle().apply {
                     putString("title", args_2.title)
@@ -154,7 +168,7 @@ class DebateFragment : Fragment() {
         //Adding the button to enable adding argument
         val arg_plus_frag_2 = ArgumentPlusSide2Fragment()
         val constraintSet2 = ConstraintSet()
-        if (viewModel.debateEntity.side_2_entity.isEmpty()){
+        if (viewModel.debate.debateEntity.side_2_entity.isEmpty()){
             constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
         }else{
             constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
