@@ -3,6 +3,7 @@ package developer.android.com.enlightme
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,19 +42,22 @@ class Create2Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //Log.i("Create2Fragment", container.)
         val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentCreate2Binding>(inflater, R.layout.fragment_create2, container, false)
         setHasOptionsMenu(true)
         //Click listener to next view
+        Log.i("test_activity",activity.toString())
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         binding.suivantCreate2.setOnClickListener{ view : View ->
-            viewModel.debate.debateEntity.side_1 = binding.side1.text.toString()
-            viewModel.debate.debateEntity.side_2 = binding.side2.text.toString()
+            viewModel.debate.value?.debateEntity?.side_1 = binding.side1.text.toString()
+            viewModel.debate.value?.debateEntity?.side_2 = binding.side2.text.toString()
             //Creating attendee
-            val user = Attendee(binding.pseudo.text.toString())
-            viewModel.debate.listAttendees.add(user)
-            viewModel.attendee = user
+            val user = Attendee()
+            user.name = binding.pseudo.text.toString()
+            viewModel.debate.value?.listAttendees?.add(user)
+            viewModel.attendee.value = user
             view.findNavController().navigate(R.id.action_create2Fragment_to_debateFragment)
         }
         return binding.root

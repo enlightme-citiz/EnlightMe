@@ -48,10 +48,10 @@ class Create1Fragment : Fragment() {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         binding.suivantCreate1.setOnClickListener{ view : View ->
-            viewModel.debate.debateEntity.title = binding.debateQuestion.text.toString()
+            viewModel.debate.value?.debateEntity?.title = binding.debateQuestion.text.toString()
             Log.i("Create1Fragment", binding.debateQuestion.text.toString())
-            Log.i("Create1Fragment", viewModel.debate.debateEntity.title)
-            viewModel.debate.debateEntity.description = binding.introNewDebat.text.toString()
+            Log.i("Create1Fragment", viewModel.debate.value?.debateEntity?.title)
+            viewModel.debate.value?.debateEntity?.description = binding.introNewDebat.text.toString()
             view.findNavController().navigate(R.id.action_create1Fragment_to_create2Fragment)
         }
         return binding.root

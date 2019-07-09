@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.android.synthetic.main.fragment_debate.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -41,21 +43,31 @@ class DebateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //Log.i("DebateFragment", container.toString())
         val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentDebateBinding>(inflater, R.layout.fragment_debate, container, false)
+        setHasOptionsMenu(true)
         // Inflate the layout for this fragment
+        Log.i("test_activity",activity.toString())
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-        Log.i("DebateFragment", viewModel.debate.debateEntity.title)
-        Log.i("DebateFragment", viewModel.debate.debateEntity.side_1)
-        Log.i("DebateFragment", viewModel.debate.debateEntity.side_2)
-        binding.debateQuestion.text = "test question"//viewModel.debate.debateEntity.title
-        binding.side1.text = viewModel.debate.debateEntity.side_1
-        binding.side2.text = viewModel.debate.debateEntity.side_2
-        Log.i("DebateFragment", binding.side1.text.toString())
-        Log.i("DebateFragment", binding.side2.text.toString())
+        //Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.title)
+        //Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.side_1)
+        //Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.side_2)
+        // viewModel.debate.observe(this, Observer { newDebate ->
+        //     binding.side1.text = newDebate.debateEntity.side_1.toString()
+        //     binding.side2.text = newDebate.debateEntity.side_2.toString()
+        //     binding.debateQuestion.text = newDebate.debateEntity.title.toString()
+        // })
+        //Log.i("DebateFragment", binding.side1.text.toString())
+        //Log.i("DebateFragment", binding.side2.text.toString())
+        binding.side1.text = viewModel.debate.value?.debateEntity?.side_1.toString()
+        binding.side2.text = viewModel.debate.value?.debateEntity?.side_2.toString()
+        binding.debateQuestion.setText(viewModel.debate.value?.debateEntity?.title.toString())
+        //Log.i("DebateFragment", binding.side1.text.toString())
+        //Log.i("DebateFragment", binding.side2.text.toString())
         this.populate_arguments()
-        return inflater.inflate(R.layout.fragment_debate, container, false)
+        return binding.root
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -116,7 +128,7 @@ class DebateFragment : Fragment() {
         val fragTransaction = fragMan?.beginTransaction()
         // Filling side 1 with arguments
         var top_elmt_id = R.id.side_1_arg_container
-        for((iarg_1, args_1) in viewModel.debate.debateEntity.side_1_entity.withIndex()){
+        for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
             val arg_frag = ArgumentSide1Fragment().apply {
                 arguments = Bundle().apply {
                     putString("title", args_1.title)
@@ -137,7 +149,7 @@ class DebateFragment : Fragment() {
         //Adding the button to enable adding argument
         val arg_plus_frag_1 = ArgumentPlusSide1Fragment()
         val constraintSet1 = ConstraintSet()
-        if (viewModel.debate.debateEntity.side_1_entity.isEmpty()){
+        if (viewModel.debate.value?.debateEntity?.side_1_entity?.isEmpty() ?: true){
             constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
         }else{
             constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
@@ -146,7 +158,7 @@ class DebateFragment : Fragment() {
 
         // Filling side 2 with arguments
         top_elmt_id = R.id.side_2_arg_container
-        for((iarg_2, args_2) in viewModel.debate.debateEntity.side_2_entity.withIndex()){
+        for((iarg_2, args_2) in viewModel.debate.value?.debateEntity?.side_2_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
             val arg_frag = ArgumentSide2Fragment().apply {
                 arguments = Bundle().apply {
                     putString("title", args_2.title)
@@ -168,7 +180,7 @@ class DebateFragment : Fragment() {
         //Adding the button to enable adding argument
         val arg_plus_frag_2 = ArgumentPlusSide2Fragment()
         val constraintSet2 = ConstraintSet()
-        if (viewModel.debate.debateEntity.side_2_entity.isEmpty()){
+        if (viewModel.debate.value?.debateEntity?.side_2_entity?.isEmpty() ?: true){
             constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
         }else{
             constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
