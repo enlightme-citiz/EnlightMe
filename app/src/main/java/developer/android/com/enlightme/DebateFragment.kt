@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.android.synthetic.main.fragment_debate.*
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -33,7 +35,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 class DebateFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var viewModel: DebateViewModel
-    private var listener: DebateFragment.OnFragmentInteractionListener? = null
+    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +46,7 @@ class DebateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         //Log.i("DebateFragment", container.toString())
-        val binding = DataBindingUtil.inflate<developer.android.com.enlightme.databinding.FragmentDebateBinding>(inflater, R.layout.fragment_debate, container, false)
+        val binding = DataBindingUtil.inflate<FragmentDebateBinding>(inflater, R.layout.fragment_debate, container, false)
         setHasOptionsMenu(true)
         // Inflate the layout for this fragment
         Log.i("test_activity",activity.toString())
@@ -66,7 +68,7 @@ class DebateFragment : Fragment() {
         binding.debateQuestion.setText(viewModel.debate.value?.debateEntity?.title.toString())
         //Log.i("DebateFragment", binding.side1.text.toString())
         //Log.i("DebateFragment", binding.side2.text.toString())
-        this.populate_arguments()
+        this.populate_arguments(binding)
         return binding.root
     }
 
@@ -122,7 +124,7 @@ class DebateFragment : Fragment() {
     }
 
 
-    fun populate_arguments(){
+    fun populate_arguments(binding : FragmentDebateBinding){
         viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
         val fragMan = fragmentManager
         val fragTransaction = fragMan?.beginTransaction()
@@ -186,5 +188,9 @@ class DebateFragment : Fragment() {
             constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
         }
         fragTransaction?.add(R.id.side_2_arg_container, arg_plus_frag_2)?.commit()
+        binding.side2ArgContainer.setOnClickListener {
+            // make a toast on button click event
+            Log.i("DebateFragment", "Button 2 clicked!")
+        }
     }
 }
