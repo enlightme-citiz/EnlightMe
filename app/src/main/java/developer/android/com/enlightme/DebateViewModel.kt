@@ -16,6 +16,7 @@ class DebateViewModel : ViewModel() {
     //Temporary debate entity. Enable instantiating and communicating debateEntity between
     // alertDialogue and debatFragment when creating a new argument
     var temp_debate_entity = DebateEntity()
+    var temp_side = 0
 
     init {
         Log.i("DebateViewModel", "DebateViewModel created!")

@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_marginEnd="@dimen/shift_arg_out"
-             android:layout_marginStart="@dimen/shift_arg_int"
-             android:layout_marginTop="@dimen/space_1to2_level"
-             tools:context="developer.android.com.enlightme.MainActivity">
-    <LinearLayout
-            android:id="@+id/argument_side2"
-            android:layout_width="@dimen/argument_plus_width"
-            android:layout_height="@dimen/argument_plus_height"
-            android:background="@drawable/ripple_arg_plus_side_2"
-            android:orientation="horizontal" android:gravity="center|center_horizontal">
-        <TextView
-                android:id="@+id/argument_side2_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:gravity="center" android:fontFamily="@font/roboto" android:textColor="@color/side_2_text"
-                android:textSize="@dimen/base_text_size"/>
-    </LinearLayout>
-    <!-- End Custom Button -->
-</FrameLayout>
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 xmlns:tools="http://schemas.android.com/tools"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_marginEnd="@dimen/shift_arg_out"
+                 android:layout_marginStart="@dimen/shift_arg_int"
+                 android:layout_marginTop="@dimen/space_1to2_level"
+                 tools:context="developer.android.com.enlightme.MainActivity">
+        <LinearLayout
+                android:id="@+id/argument_side2"
+                android:layout_width="@dimen/argument_plus_width"
+                android:layout_height="@dimen/argument_plus_height"
+                android:background="@drawable/ripple_arg_plus_side_2"
+                android:orientation="horizontal" android:gravity="center|center_horizontal">
+            <TextView
+                    android:id="@+id/argument_side2_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:gravity="center" android:fontFamily="@font/roboto" android:textColor="@color/side_2_text"
+                    android:textSize="@dimen/base_text_size"/>
+        </LinearLayout>
+        <!-- End Custom Button -->
+    </FrameLayout>
+</layout>

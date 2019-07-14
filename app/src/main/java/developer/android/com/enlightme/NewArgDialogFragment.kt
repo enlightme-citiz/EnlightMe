@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 
@@ -32,6 +31,14 @@ class NewArgDialogFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
+    // Use this instance of the interface to deliver action events
+    internal lateinit var dialogListener: NoticeDialogListener
+
+    // Interface to communicate between this dialog and debateFragment
+    interface NoticeDialogListener {
+        fun onDialogPositiveClick(dialog: DialogFragment)
+        fun onDialogNegativeClick(dialog: DialogFragment)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +64,17 @@ class NewArgDialogFragment : DialogFragment() {
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
+        // Verify that the host activity implements the callback interface
+        Log.i("TestInterfacedialog",this.toString())
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            dialogListener = this as NoticeDialogListener
+        } catch (e: ClassCastException) {
+            // The activity doesn't implement the interface, throw exception
+            throw ClassCastException((context.toString() +
+                    " must implement NoticeDialogListener"))
+        }
+
     }
 
     override fun onDetach() {
@@ -116,8 +134,8 @@ class NewArgDialogFragment : DialogFragment() {
                 .setPositiveButton(R.string.new_arg_dialogue_ok
                 ) { dialog, id ->
                     // copy argument title and summary in the temp_debate_entity of DebateViewModel
-                    viewModel.temp_debate_entity.title = dialogView.findViewById<EditText>(R.id.new_arg_dialogue_title).text.toString()
-                    viewModel.temp_debate_entity.description = dialogView.findViewById<EditText>(R.id.new_arg_dialogue_description).text.toString()
+                    viewModel.temp_debate_entity.title = dialogView.findViewById<EditText>(R.id.new_arg_dialog_title).text.toString()
+                    viewModel.temp_debate_entity.description = dialogView.findViewById<EditText>(R.id.new_arg_dialog_description).text.toString()
                 }
                 .setNegativeButton(R.string.new_arg_dialogue_cancel)
                     { dialog, id ->

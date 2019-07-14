@@ -7,13 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import developer.android.com.enlightme.databinding.FragmentArgumentSide1Binding
 import kotlinx.android.synthetic.main.fragment_argument_side1.*
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val TITLE = "title"
-private const val ID_ARG = "idArg"
+private const val DESCRIPTION = "description"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -26,16 +28,16 @@ private const val ID_ARG = "idArg"
 class ArgumentSide1Fragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var title: String? = null
-    private var id_arg: Int? = null
+    private var description: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             this.title = it.getString(TITLE)
-            this.id_arg = it.getInt(ID_ARG)
+            this.description = it.getString(DESCRIPTION)
             // put argument title to the body of the argument icon
-            argument_side1_text.text = title
+            //argument_side1_text.text = title
         }
     }
 
@@ -43,8 +45,9 @@ class ArgumentSide1Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_argument_side1, container, false)
+        val binding = DataBindingUtil.inflate<FragmentArgumentSide1Binding>(inflater, R.layout.fragment_argument_side1, container, false)
+        binding.argumentSide1Text.text = this.title
+        return binding.root
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -93,11 +96,11 @@ class ArgumentSide1Fragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(title: String, id_arg: Int) =
+        fun newInstance(title: String, description: String) =
             ArgumentSide1Fragment().apply {
                 arguments = Bundle().apply {
                     putString(TITLE, title)
-                    putInt(ID_ARG, id_arg)
+                    putString(DESCRIPTION, description)
                 }
             }
     }
