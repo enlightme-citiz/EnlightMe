@@ -8,15 +8,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.objects.DebateEntity
-import kotlinx.android.synthetic.main.fragment_debate.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -189,8 +185,9 @@ class DebateFragment : Fragment() {
         }
         fragTransaction?.add(R.id.side_2_arg_container, arg_plus_frag_2)?.commit()
         binding.side2ArgContainer.setOnClickListener {
-            // make a toast on button click event
-            Log.i("DebateFragment", "Button 2 clicked!")
+            val newArgDialogueFragment = NewArgDialogFragment()
+            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
+            newArgDialogueFragment.show(fm, "missiles")
         }
     }
 }

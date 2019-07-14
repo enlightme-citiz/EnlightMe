@@ -22,4 +22,8 @@
     <string name="debate_question">Question du débat</string>
     <string name="side_1_text">Pour</string>
     <string name="side_2_text">Contre</string>
+    <string name="new_arg_dialogue_title_hint">Titre de l\'argument</string>
+    <string name="new_arg_dialogue_details_hint">Détails sur l\'argument</string>
+    <string name="new_arg_dialogue_ok">Valider</string>
+    <string name="new_arg_dialogue_cancel">Annuler</string>
 </resources>

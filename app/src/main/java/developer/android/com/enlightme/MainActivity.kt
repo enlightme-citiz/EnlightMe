@@ -15,7 +15,8 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
     ArgumentPlusSide1Fragment.OnFragmentInteractionListener,
     ArgumentPlusSide2Fragment.OnFragmentInteractionListener,
     ArgumentSide1Fragment.OnFragmentInteractionListener,
-    ArgumentSide2Fragment.OnFragmentInteractionListener{
+    ArgumentSide2Fragment.OnFragmentInteractionListener,
+    NewArgDialogFragment.OnFragmentInteractionListener{
 
     private lateinit var binding: ActivityMainBinding
 

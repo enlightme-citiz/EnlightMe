@@ -13,10 +13,10 @@ class DebateViewModel : ViewModel() {
     val debate = MutableLiveData<Debate>()
     //Attendee
     val attendee = MutableLiveData<Attendee>()
-    //Debate entity
-    //private val _debateEntity = MutableLiveData<DebateEntity>()
-    //val debateEntity: LiveData<DebateEntity>
-    //    get() = _debateEntity
+    //Temporary debate entity. Enable instantiating and communicating debateEntity between
+    // alertDialogue and debatFragment when creating a new argument
+    var temp_debate_entity = DebateEntity()
+
     init {
         Log.i("DebateViewModel", "DebateViewModel created!")
         debate.value = Debate()
