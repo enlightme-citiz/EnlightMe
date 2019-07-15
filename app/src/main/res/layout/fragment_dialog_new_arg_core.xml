@@ -15,7 +15,8 @@
             android:id="@+id/new_arg_dialog_title" android:hint="@string/new_arg_dialogue_title_hint"
             android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:textAlignment="center" android:text="Testdemontext"/>
+            app:layout_constraintTop_toTopOf="parent" android:textAlignment="center"
+            android:textColor="@color/primary_text_color"/>
     <EditText
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -27,5 +28,5 @@
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" android:textAlignment="textStart"
             android:gravity="start|top" android:hint="@string/new_arg_dialogue_details_hint"
-            android:layout_below="@+id/new_arg_dialog_title"/>
+            android:layout_below="@+id/new_arg_dialog_title" android:textColor="@color/secondary_text_color"/>
 </RelativeLayout>

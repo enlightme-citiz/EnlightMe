@@ -15,8 +15,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 style="@style/head_line_text"
-                android:fontFamily="@font/roboto"/>
-        <!--Side 1 header-->
+                android:fontFamily="@font/roboto" android:textColor="@color/primary_text_color"/>
+        <!--Side 2 header-->
         <TextView
                 android:text="@string/side_2_text"
                 android:id="@+id/side_2"
@@ -25,7 +25,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/debate_question"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/seperator" app:layout_constraintHorizontal_bias="0.5"
-                android:width="@dimen/side_header_width" android:textAlignment="center"/>
+                android:width="@dimen/side_header_width" android:textAlignment="center"
+                android:fontFamily="@font/roboto"/>
+        <!--Side 1 header-->
         <TextView
                 android:text="@string/side_1_text"
                 android:id="@+id/side_1"
@@ -33,7 +35,9 @@
                 android:layout_marginTop="@dimen/space_1to2_level"
                 app:layout_constraintTop_toBottomOf="@+id/debate_question" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/seperator"
-                android:width="@dimen/side_header_width" android:textAlignment="center"/>
+                android:width="@dimen/side_header_width" android:textAlignment="center"
+                android:fontFamily="@font/roboto"
+        />
         <!-- Rectangle -->
         <View
                 android:id="@+id/seperator"

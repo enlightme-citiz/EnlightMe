@@ -20,7 +20,7 @@
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="@dimen/margin_top_value"
                 app:layout_constraintTop_toTopOf="parent" android:textSize="@dimen/head_line_text_size"
-                android:height="@dimen/input_field_height"/>
+                android:height="@dimen/input_field_height" android:textColor="@color/primary_text_color"/>
         <EditText
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -34,7 +34,7 @@
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="@dimen/space_1to2_level"
                 app:layout_constraintBottom_toTopOf="@+id/suivant_create_1" android:textSize="@dimen/base_text_size"
                 android:fontFamily="@font/roboto" android:textAlignment="textStart"
-                android:hint="@string/hint_intro_new_debat"/>
+                android:hint="@string/hint_intro_new_debat" android:textColor="@color/secondary_text_color"/>
         <!--Load-->
         <com.google.android.material.button.MaterialButton
                 android:text="@string/nav_button_suivant"

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
@@ -16,6 +17,9 @@ import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.android.synthetic.main.fragment_main.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
+import developer.android.com.enlightme.databinding.FragmentArgumentPlusSide1Binding
+import developer.android.com.enlightme.databinding.FragmentArgumentPlusSide2Binding
+import kotlinx.android.synthetic.main.fragment_argument_plus_side1.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -53,7 +57,6 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_debate, container, false)
         setHasOptionsMenu(true)
-        // Inflate the layout for this fragment
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
@@ -62,9 +65,6 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
         binding.debateQuestion.setText(viewModel.debate.value?.debateEntity?.title.toString())
         this.populate_arguments()
         val debateFragmentObj = this.fragmentManager?.findFragmentById(this.id)
-        Log.i("debateFragmentId", "Farg_test")
-        Log.i("debateFragmentId", debateFragmentObj.toString())
-        Log.i("debateFragmentId", debateFragmentObj?.javaClass.toString())
         activity?.run {
             if(this is MainActivity){
                 if(debateFragmentObj is DebateFragment){
@@ -133,8 +133,7 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-        val fragMan = fragmentManager
-        val fragTransaction = fragMan?.beginTransaction()
+        val fragTransaction = fragmentManager?.beginTransaction()
         // Filling side 1 with arguments
         var top_elmt_id = R.id.side_1_arg_container
         for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
@@ -198,15 +197,16 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
             constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
         }
         fragTransaction?.add(R.id.side_2_arg_container, addArg2Frag)?.commit()
+
+        val rootView: View = layoutInflater.inflate(R.layout.fragment_argument_plus_side2, binding.side2ArgContainer, false)
         //Adding event listener for the button
-        binding.side2ArgContainer.setOnClickListener {
-            viewModel.temp_side = 2
-            Log.i("temp_side", viewModel.temp_side.toString())
-            val newArgDialogueFragment = NewArgDialogFragment()
-            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
-            newArgDialogueFragment.show(fm, "newArgument")
+        val argumentPLusSide2 = rootView.findViewById<LinearLayout>(R.id.argument_plus_2)
+        //val bindingAdd2 = DataBindingUtil.inflate<FragmentArgumentPlusSide2Binding>(this.layoutInflater,R.layout.fragment_argument_plus_side2,null,false)
+        argumentPLusSide2.setOnClickListener {
+
         }
-        binding.side1ArgContainer.setOnClickListener {
+        val bindingAdd1 = DataBindingUtil.inflate<FragmentArgumentPlusSide1Binding>(this.layoutInflater, R.layout.fragment_argument_plus_side1, null, false)
+        bindingAdd1.argumentPlus1.setOnClickListener {
             viewModel.temp_side = 1
             Log.i("temp_side", viewModel.temp_side.toString())
             val newArgDialogueFragment = NewArgDialogFragment()

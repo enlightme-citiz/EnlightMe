@@ -3,10 +3,13 @@ package developer.android.com.enlightme
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.lifecycle.ViewModelProviders
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -21,10 +24,10 @@ import android.view.ViewGroup
  * create an instance of this fragment.
  *
  */
-class ArgumentPlusSide1Fragment : Fragment() {
+class ArgumentPlusSide1Fragment : Fragment(), View.OnClickListener{
     // TODO: Rename and change types of parameters
     private var listener: OnFragmentInteractionListener? = null
-
+    private lateinit var viewModel: DebateViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -33,8 +36,15 @@ class ArgumentPlusSide1Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_argument_plus_side1, container, false)
+        val addArgButtonView = inflater.inflate(R.layout.fragment_argument_plus_side1, container, false)
+        //Attache click event listener to display the Add argument dialogue box
+        val addArgButton = addArgButtonView.findViewById<LinearLayout>(R.id.argument_plus_1)
+        addArgButton.setOnClickListener(this)
+        return addArgButtonView
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -88,5 +98,12 @@ class ArgumentPlusSide1Fragment : Fragment() {
                 arguments = Bundle().apply {
                 }
             }
+    }
+    override fun onClick(v: View) {
+        viewModel.temp_side = 1
+        Log.i("temp_side", viewModel.temp_side.toString())
+        val newArgDialogueFragment = NewArgDialogFragment()
+        val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
+        newArgDialogueFragment.show(fm, "newArgument")
     }
 }
