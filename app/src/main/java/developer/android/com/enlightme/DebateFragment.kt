@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_argument_plus_side1.*
  * create an instance of this fragment.
  *
  */
-class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
+class DebateFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var viewModel: DebateViewModel
     private var listener: OnFragmentInteractionListener? = null
@@ -197,35 +197,8 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
             constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
         }
         fragTransaction?.add(R.id.side_2_arg_container, addArg2Frag)?.commit()
+    }
 
-        val rootView: View = layoutInflater.inflate(R.layout.fragment_argument_plus_side2, binding.side2ArgContainer, false)
-        //Adding event listener for the button
-        val argumentPLusSide2 = rootView.findViewById<LinearLayout>(R.id.argument_plus_2)
-        //val bindingAdd2 = DataBindingUtil.inflate<FragmentArgumentPlusSide2Binding>(this.layoutInflater,R.layout.fragment_argument_plus_side2,null,false)
-        argumentPLusSide2.setOnClickListener {
-
-        }
-        val bindingAdd1 = DataBindingUtil.inflate<FragmentArgumentPlusSide1Binding>(this.layoutInflater, R.layout.fragment_argument_plus_side1, null, false)
-        bindingAdd1.argumentPlus1.setOnClickListener {
-            viewModel.temp_side = 1
-            Log.i("temp_side", viewModel.temp_side.toString())
-            val newArgDialogueFragment = NewArgDialogFragment()
-            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
-            newArgDialogueFragment.show(fm, "newArgument")
-        }
-    }
-    // The dialog fragment receives a reference to this Activity through the
-    // Fragment.onAttach() callback, which it uses to call the following methods
-    // defined by the NoticeDialogFragment.NoticeDialogListener interface
-    override fun onDialogPositiveClick(dialog: DialogFragment) {
-        // User touched the dialog's positive button
-        //Log.i("debugcom", "Touched debat fragment")
-        //this.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
-        //viewModel.temp_side = 0
-    }
-    override fun onDialogNegativeClick(dialog: DialogFragment) {
-        // User touched the dialog's negative button
-    }
     // Add one argument to one side
     fun addArgument(side: Int, debateEntity: DebateEntity){
         val constraintSet = ConstraintSet()

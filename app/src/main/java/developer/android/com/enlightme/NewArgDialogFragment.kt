@@ -139,7 +139,6 @@ class NewArgDialogFragment : DialogFragment(){
                 }
                 .setNegativeButton(R.string.new_arg_dialogue_cancel)
                     { dialog, id ->
-                        dialogListener.onDialogPositiveClick(this)
                         getDialog()?.cancel()
                     }
             builder.create()

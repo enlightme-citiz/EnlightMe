@@ -52,10 +52,6 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
         debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
         viewModel.temp_side = 0
         viewModel.temp_debate_entity = DebateEntity()
-        // User touched the dialog's positive button
-        //this.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
-
-
     }
     override fun onDialogNegativeClick(dialog: DialogFragment) {
         // User touched the dialog's negative button
