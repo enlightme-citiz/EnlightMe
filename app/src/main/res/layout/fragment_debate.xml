@@ -77,10 +77,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/side_1"
-                android:layout_marginTop="@dimen/space_1to2_level">
+                android:layout_marginTop="@dimen/space_1to2_level"
+                android:id="@+id/arg_container">
 
                 <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:id="@+id/side_1_arg_container"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -88,7 +89,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:id="@+id/side_2_arg_container"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

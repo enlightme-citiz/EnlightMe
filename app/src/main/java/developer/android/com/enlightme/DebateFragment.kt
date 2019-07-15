@@ -15,6 +15,7 @@ import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.android.synthetic.main.fragment_main.*
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,6 +35,14 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
     private lateinit var viewModel: DebateViewModel
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var binding: FragmentDebateBinding
+    //Liste of side 1 argument (ArgumentSide1Fragment)
+    private var side1ArgList = mutableListOf<ArgumentSide1Fragment>()
+    //Liste of side 2 argument (ArgumentSide2Fragment)
+    private var side2ArgList = mutableListOf<ArgumentSide2Fragment>()
+    // Attribut to hold the plus buttons fragments
+    private lateinit var addArg1Frag: ArgumentPlusSide1Fragment
+    private lateinit var addArg2Frag: ArgumentPlusSide2Fragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -42,30 +51,29 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //Log.i("DebateFragment", container.toString())
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_debate, container, false)
         setHasOptionsMenu(true)
         // Inflate the layout for this fragment
-        Log.i("test_activity",activity.toString())
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-        //Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.title)
-        //Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.side_1)
-        //Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.side_2)
-        // viewModel.debate.observe(this, Observer { newDebate ->
-        //     binding.side1.text = newDebate.debateEntity.side_1.toString()
-        //     binding.side2.text = newDebate.debateEntity.side_2.toString()
-        //     binding.debateQuestion.text = newDebate.debateEntity.title.toString()
-        // })
-        //Log.i("DebateFragment", binding.side1.text.toString())
-        //Log.i("DebateFragment", binding.side2.text.toString())
         binding.side1.text = viewModel.debate.value?.debateEntity?.side_1.toString()
         binding.side2.text = viewModel.debate.value?.debateEntity?.side_2.toString()
         binding.debateQuestion.setText(viewModel.debate.value?.debateEntity?.title.toString())
-        //Log.i("DebateFragment", binding.side1.text.toString())
-        //Log.i("DebateFragment", binding.side2.text.toString())
         this.populate_arguments()
+        val debateFragmentObj = this.fragmentManager?.findFragmentById(this.id)
+        Log.i("debateFragmentId", "Farg_test")
+        Log.i("debateFragmentId", debateFragmentObj.toString())
+        Log.i("debateFragmentId", debateFragmentObj?.javaClass.toString())
+        activity?.run {
+            if(this is MainActivity){
+                if(debateFragmentObj is DebateFragment){
+                    this.debateFragment = debateFragmentObj
+                }else{
+                    throw IllegalArgumentException("debateFragment should be of class DebateFragment.")
+                }
+            }
+        }
         return binding.root
     }
 
@@ -122,7 +130,9 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
 
 
     fun populate_arguments(){
-        viewModel = ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
         val fragMan = fragmentManager
         val fragTransaction = fragMan?.beginTransaction()
         // Filling side 1 with arguments
@@ -134,6 +144,7 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
                     putString("description", args_1.description)
                 }
             }
+            side1ArgList.add(arg_frag)
             // Constraining wit the previous element
             val constraintSet = ConstraintSet()
             if (iarg_1 == 0){
@@ -146,14 +157,14 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
             top_elmt_id = arg_frag.id
         }
         //Adding the button to enable adding argument
-        val arg_plus_frag_1 = ArgumentPlusSide1Fragment()
+        addArg1Frag = ArgumentPlusSide1Fragment()
         val constraintSet1 = ConstraintSet()
         if (viewModel.debate.value?.debateEntity?.side_1_entity?.isEmpty() ?: true){
-            constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
+            constraintSet1.connect(addArg1Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
         }else{
-            constraintSet1.connect(arg_plus_frag_1.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
+            constraintSet1.connect(addArg1Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
         }
-        fragTransaction?.add(R.id.side_1_arg_container, arg_plus_frag_1)
+        fragTransaction?.add(R.id.side_1_arg_container, addArg1Frag)
 
         // Filling side 2 with arguments
         top_elmt_id = R.id.side_2_arg_container
@@ -164,6 +175,7 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
                     putString("description", args_2.description)
                 }
             }
+            side2ArgList.add(arg_frag)
             // Constraining wit the previous element
             val constraintSet = ConstraintSet()
             if (iarg_2 == 0){
@@ -177,16 +189,26 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
         }
 
         //Adding the button to enable adding argument
-        val arg_plus_frag_2 = ArgumentPlusSide2Fragment()
+        addArg2Frag = ArgumentPlusSide2Fragment()
+        
         val constraintSet2 = ConstraintSet()
         if (viewModel.debate.value?.debateEntity?.side_2_entity?.isEmpty() ?: true){
-            constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
+            constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
         }else{
-            constraintSet2.connect(arg_plus_frag_2.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
+            constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
         }
-        fragTransaction?.add(R.id.side_2_arg_container, arg_plus_frag_2)?.commit()
+        fragTransaction?.add(R.id.side_2_arg_container, addArg2Frag)?.commit()
+        //Adding event listener for the button
         binding.side2ArgContainer.setOnClickListener {
             viewModel.temp_side = 2
+            Log.i("temp_side", viewModel.temp_side.toString())
+            val newArgDialogueFragment = NewArgDialogFragment()
+            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
+            newArgDialogueFragment.show(fm, "newArgument")
+        }
+        binding.side1ArgContainer.setOnClickListener {
+            viewModel.temp_side = 1
+            Log.i("temp_side", viewModel.temp_side.toString())
             val newArgDialogueFragment = NewArgDialogFragment()
             val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
             newArgDialogueFragment.show(fm, "newArgument")
@@ -197,8 +219,9 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
     override fun onDialogPositiveClick(dialog: DialogFragment) {
         // User touched the dialog's positive button
-        viewModel.temp_side = 2
-        populate_arguments()
+        //Log.i("debugcom", "Touched debat fragment")
+        //this.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
+        //viewModel.temp_side = 0
     }
     override fun onDialogNegativeClick(dialog: DialogFragment) {
         // User touched the dialog's negative button
@@ -206,43 +229,44 @@ class DebateFragment : Fragment(), NewArgDialogFragment.NoticeDialogListener {
     // Add one argument to one side
     fun addArgument(side: Int, debateEntity: DebateEntity){
         val constraintSet = ConstraintSet()
-        val fragMan = fragmentManager
-        val fragTransaction = fragMan?.beginTransaction()
+        val fragTransaction = fragmentManager?.beginTransaction()
         val newArgFrag: Fragment
         when(side){
             1 -> {
                 viewModel.debate.value?.debateEntity?.side_1_entity?.add(debateEntity)
                 newArgFrag = ArgumentSide1Fragment.newInstance(debateEntity.title, debateEntity.description)
-                if (viewModel.debate.value?.debateEntity?.side_1_entity?.isEmpty() ?: true){
+                if (side1ArgList.isEmpty()){
                     //Constraints with the top element
                     constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, binding.side1ArgContainer.id, ConstraintSet.TOP, 10)
                 }else{
                     //Constraints with the top element
-                    val child = binding.side1ArgContainer.getChildAt(binding.side1ArgContainer.getChildCount()-1)
-                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, child.id, ConstraintSet.BOTTOM, 5)
+                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, side1ArgList[-1].id, ConstraintSet.BOTTOM, 5)
                 }
                 // Constraining the plus button
-                val plusButton = binding.side1ArgContainer.getChildAt(binding.side1ArgContainer.getChildCount())
+                val plusButton = binding.side1ArgContainer.getChildAt(binding.side1ArgContainer.getChildCount()-1)
                 constraintSet.connect(plusButton.id, ConstraintSet.TOP, newArgFrag.id, ConstraintSet.BOTTOM, 5)
                 fragTransaction?.add(R.id.side_1_arg_container, newArgFrag)?.commit()
             }
             2 -> {
                 viewModel.debate.value?.debateEntity?.side_2_entity?.add(debateEntity)
                 newArgFrag = ArgumentSide2Fragment.newInstance(debateEntity.title, debateEntity.description)
-                if (viewModel.debate.value?.debateEntity?.side_2_entity?.isEmpty() ?: true){
+                if (side2ArgList.isEmpty()){
                     //Constraints with the top element
                     constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, binding.side2ArgContainer.id, ConstraintSet.TOP, 10)
                 }else{
                     //Constraints with the top element
-                    val child = binding.side2ArgContainer.getChildAt(binding.side2ArgContainer.getChildCount()-1)
-                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, child.id, ConstraintSet.BOTTOM, 5)
+                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, side2ArgList[-1].id, ConstraintSet.BOTTOM, 5)
                 }
                 // Constraining the plus button
-                val plusButton = binding.side2ArgContainer.getChildAt(binding.side2ArgContainer.getChildCount())
+                val plusButton = binding.side2ArgContainer.getChildAt(binding.side2ArgContainer.getChildCount()-1)
                 constraintSet.connect(plusButton.id, ConstraintSet.TOP, newArgFrag.id, ConstraintSet.BOTTOM, 5)
                 fragTransaction?.add(R.id.side_2_arg_container, newArgFrag)?.commit()
             }
-            else -> throw IllegalArgumentException("side should be either 1 or 2.")
+            else -> {
+                //Log.i("temp_side", side.toString())
+                throw IllegalArgumentException("side should be either 1 or 2.")
+            }
         }
     }
+
 }

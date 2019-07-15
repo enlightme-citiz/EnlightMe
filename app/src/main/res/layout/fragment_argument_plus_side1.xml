@@ -8,7 +8,7 @@
              android:layout_marginTop="@dimen/space_1to2_level"
              tools:context="developer.android.com.enlightme.MainActivity">
         <LinearLayout
-                android:id="@+id/argument_plus"
+                android:id="@+id/argument_plus_1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/argument_plus_height"
                 android:background="@drawable/ripple_arg_plus_side_1"
