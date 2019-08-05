@@ -3,11 +3,13 @@ package developer.android.com.enlightme
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -51,14 +53,28 @@ class Create2Fragment : Fragment() {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         binding.suivantCreate2.setOnClickListener{ view : View ->
-            viewModel.debate.value?.debateEntity?.side_1 = binding.side1.text.toString()
-            viewModel.debate.value?.debateEntity?.side_2 = binding.side2.text.toString()
-            //Creating attendee
-            val user = Attendee()
-            user.name = binding.pseudo.text.toString()
-            viewModel.debate.value?.listAttendees?.add(user)
-            viewModel.attendee.value = user
-            view.findNavController().navigate(R.id.action_create2Fragment_to_debateFragment)
+            // Checking if all fields are filled
+            var toast = false
+            if (TextUtils.isEmpty(binding.side1.text.toString()) ||
+                TextUtils.isEmpty(binding.side2.text.toString())){
+                Toast.makeText(activity, getResources().getString(R.string.side_not_filed), Toast.LENGTH_SHORT).show()
+                toast = true
+            }
+            if (TextUtils.isEmpty(binding.pseudo.text.toString())){
+                Toast.makeText(activity, getResources().getString(R.string.pseudo_not_filed), Toast.LENGTH_SHORT).show()
+                toast = true
+            }
+            // Saving data and moving to the debate
+            if (toast == false){
+                viewModel.debate.value?.debateEntity?.side_1 = binding.side1.text.toString()
+                viewModel.debate.value?.debateEntity?.side_2 = binding.side2.text.toString()
+                //Creating attendee
+                val user = Attendee()
+                user.name = binding.pseudo.text.toString()
+                viewModel.debate.value?.listAttendees?.add(user)
+                viewModel.attendee.value = user
+                view.findNavController().navigate(R.id.action_create2Fragment_to_debateFragment)
+            }
         }
         return binding.root
     }

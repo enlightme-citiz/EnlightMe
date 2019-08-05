@@ -26,4 +26,8 @@
     <string name="new_arg_dialogue_details_hint">Détails sur l\'argument</string>
     <string name="new_arg_dialogue_ok">Valider</string>
     <string name="new_arg_dialogue_cancel">Annuler</string>
+    <string name="side_not_filed">Les deux réponses possibles doivent être spécifiées</string>
+    <string name="pseudo_not_filed">Le pseudo doit être spécifié</string>
+    <string name="question_not_filled">La question doit être spécifiée</string>
+    <string name="intro_not_filed">Une introduction au débat doit être spécifiée</string>
 </resources>

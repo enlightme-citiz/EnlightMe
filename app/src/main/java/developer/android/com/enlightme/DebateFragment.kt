@@ -151,7 +151,8 @@ class DebateFragment : Fragment() {
             }else{
                 constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
             }
-            constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
+            Log.i("DebateFragment", top_elmt_id.toString())
+            // constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
             fragTransaction?.add(R.id.side_1_arg_container, arg_frag)
             top_elmt_id = arg_frag.id
         }
@@ -182,7 +183,7 @@ class DebateFragment : Fragment() {
             }else{
                 constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
             }
-            constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
+            //constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
             fragTransaction?.add(R.id.side_1_arg_container, arg_frag)
             top_elmt_id = arg_frag.id
         }
