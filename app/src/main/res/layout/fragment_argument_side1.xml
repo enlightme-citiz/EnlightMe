@@ -10,7 +10,7 @@
                  tools:context="developer.android.com.enlightme.MainActivity">
         <LinearLayout
                 android:id="@+id/argument_side1"
-                android:layout_width="@dimen/argument_plus_width"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/argument_plus_height"
                 android:background="@drawable/ripple_arg_plus_side_1"
                 android:orientation="vertical" android:gravity="center|center_horizontal">

@@ -11,7 +11,6 @@
     <dimen name="input_field_height">45dp</dimen>
     <dimen name="side_header_width">125dp</dimen>
     <dimen name="argument_plus_height">57dp</dimen>
-    <dimen name="argument_plus_width">190dp</dimen>
     <dimen name="shift_arg_out">-15dp</dimen>
     <dimen name="shift_arg_int">7dp</dimen>
     <dimen name="round_arg">10dp</dimen>

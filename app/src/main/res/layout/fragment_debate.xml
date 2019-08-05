@@ -41,7 +41,7 @@
         <!-- Rectangle -->
         <View
                 android:id="@+id/seperator"
-                android:layout_width="5dp"
+                android:layout_width="1dp"
                 android:layout_height="200dp"
                 android:elevation="6dp"
                 android:layout_marginTop="@dimen/space_1to2_level"
@@ -82,7 +82,8 @@
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/side_1"
                 android:layout_marginTop="@dimen/space_1to2_level"
-                android:id="@+id/arg_container">
+                android:id="@+id/arg_container"
+                android:baselineAligned="false">
 
                 <LinearLayout
                         android:orientation="vertical"
@@ -92,12 +93,12 @@
                         android:layout_weight=".50" >
                 </LinearLayout>
 
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:id="@+id/side_2_arg_container"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".50" />
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/side_2_arg_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".50"/>
 
         </LinearLayout>
 
