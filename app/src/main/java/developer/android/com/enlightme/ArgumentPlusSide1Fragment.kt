@@ -101,7 +101,6 @@ class ArgumentPlusSide1Fragment : Fragment(), View.OnClickListener{
     }
     override fun onClick(v: View) {
         viewModel.temp_side = 1
-        Log.i("temp_side", viewModel.temp_side.toString())
         val newArgDialogueFragment = NewArgDialogFragment()
         val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
         newArgDialogueFragment.show(fm, "newArgument")

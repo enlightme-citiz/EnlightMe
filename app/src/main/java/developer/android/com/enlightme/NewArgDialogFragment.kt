@@ -12,13 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
+private const val ARG_TITLE = "title"
+private const val ARG_SUMMARY = "summary"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -29,7 +31,9 @@ import androidx.lifecycle.ViewModelProviders
  *
  */
 class NewArgDialogFragment : DialogFragment(){
-    // TODO: Rename and change types of parameters
+    private var title: String? = null
+    private var summary: String? = null
+
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
     // Use this instance of the interface to deliver action events
@@ -37,6 +41,10 @@ class NewArgDialogFragment : DialogFragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            title = it.getString(ARG_TITLE)
+            summary = it.getString(ARG_SUMMARY)
+        }
     }
     // Interface to communicate between this dialog and debateFragment
     interface NoticeDialogListener {
@@ -47,8 +55,18 @@ class NewArgDialogFragment : DialogFragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val inflated = inflater.inflate(R.layout.fragment_dialog_new_arg, container, false)
+        var title_edit_text = view?.findViewById<EditText>(R.id.new_arg_dialog_title)
+        if(title != null){
+            title_edit_text?.setText(title.toString())
+        }
+        var summary_edit_text = view?.findViewById<EditText>(R.id.new_arg_dialog_description)
+        if(summary != null){
+            summary_edit_text?.setText(summary.toString())
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dialog_new_arg, container, false)
+        return inflated
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

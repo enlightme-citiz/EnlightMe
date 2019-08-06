@@ -7,41 +7,33 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.databinding.DataBindingUtil
-import developer.android.com.enlightme.databinding.FragmentArgumentSide1Binding
-import kotlinx.android.synthetic.main.fragment_argument_side1.*
-import android.view.View.OnLongClickListener
-
-
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val TITLE = "title"
-private const val DESCRIPTION = "description"
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
+
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [ArgumentSide1Fragment.OnFragmentInteractionListener] interface
+ * [BlankFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [ArgumentSide1Fragment.newInstance] factory method to
+ * Use the [BlankFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class ArgumentSide1Fragment : Fragment() {
+class BlankFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var title: String? = null
-    private var description: String? = null
+    private var param1: String? = null
+    private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            this.title = it.getString(TITLE)
-            this.description = it.getString(DESCRIPTION)
-            // put argument title to the body of the argument icon
-            //argument_side1_text.text = title
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -49,26 +41,9 @@ class ArgumentSide1Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentArgumentSide1Binding>(inflater, R.layout.fragment_argument_side1, container, false)
-        binding.argumentSide1Text.text = this.title
-        //Attache click event listener to display the Add argument dialogue box
-        view?.setOnLongClickListener{
-            // Long click listener function to edit the argument
-            val title = this.title
-            val description = this.description
-            val newArgDialogueFragment = NewArgDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString("title", title)
-                    putString("description", description)
-                }
-            }
-            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
-            newArgDialogueFragment.show(fm, "editArgument")
-            true
-        }
-        return binding.root
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_blank, container, false)
     }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
@@ -112,15 +87,15 @@ class ArgumentSide1Fragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ArgumentSide1Fragment.
+         * @return A new instance of fragment BlankFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(title: String, description: String) =
-            ArgumentSide1Fragment().apply {
+        fun newInstance(param1: String, param2: String) =
+            BlankFragment().apply {
                 arguments = Bundle().apply {
-                    putString(TITLE, title)
-                    putString(DESCRIPTION, description)
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
                 }
             }
     }

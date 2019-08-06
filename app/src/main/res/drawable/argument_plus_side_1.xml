@@ -4,7 +4,7 @@
        tools:ignore="ExtraText"
        android:shape= "rectangle"
        android:layout_height="@dimen/argument_plus_height"
-       android:layout_width="@dimen/argument_plus_width">
+       android:layout_width="match_parent">
 
     <corners
         android:radius="@dimen/round_arg"/>
