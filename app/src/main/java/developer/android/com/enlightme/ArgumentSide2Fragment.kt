@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import developer.android.com.enlightme.databinding.FragmentArgumentSide2Binding
 
 
@@ -30,6 +31,7 @@ class ArgumentSide2Fragment : Fragment() {
     private var title: String? = null
     private var description: String? = null
     private var listener: OnFragmentInteractionListener? = null
+    private lateinit var viewModel: DebateViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,9 @@ class ArgumentSide2Fragment : Fragment() {
             // put argument title to the body of the argument icon
             //argument_side2_text.text = title
         }
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
@@ -47,6 +52,22 @@ class ArgumentSide2Fragment : Fragment() {
     ): View? {
         val binding = DataBindingUtil.inflate<FragmentArgumentSide2Binding>(inflater, R.layout.fragment_argument_side2, container, false)
         binding.argumentSide2Text.text = this.title
+        //Attache click event listener to display the Add argument dialogue box
+        binding.root.setOnLongClickListener{
+            // Long click listener function to edit the argument
+            viewModel.temp_side = 2
+            val title = this.title
+            val description = this.description
+            val newArgDialogueFragment = NewArgDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putString("title", title)
+                    putString("description", description)
+                }
+            }
+            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
+            newArgDialogueFragment.show(fm, "editArgument")
+            true
+        }
         return binding.root
     }
 

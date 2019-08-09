@@ -49,7 +49,12 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
     // Fragment.onAttach() callback, which it uses to call the following methods
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
     override fun onDialogPositiveClick(dialog: DialogFragment) {
-        debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
+        if(viewModel.edit_arg_pos >= 0){
+            debateFragment.modArgument(viewModel.temp_side,
+                viewModel.temp_debate_entity, viewModel.edit_arg_pos)
+        }else{
+            debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
+        }
         viewModel.temp_side = 0
         viewModel.temp_debate_entity = DebateEntity()
     }

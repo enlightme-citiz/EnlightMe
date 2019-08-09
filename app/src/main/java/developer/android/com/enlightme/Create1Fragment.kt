@@ -51,14 +51,14 @@ class Create1Fragment : Fragment() {
         binding.suivantCreate1.setOnClickListener{ view : View ->
             // Checking if all fields are filled
             var toast = false
-            if (TextUtils.isEmpty(binding.debateQuestion.text.toString())){
-                Toast.makeText(activity, getResources().getString(R.string.question_not_filled), Toast.LENGTH_SHORT).show()
-                toast = true
-            }
-            if (TextUtils.isEmpty(binding.introNewDebat.text.toString())){
-                Toast.makeText(activity, getResources().getString(R.string.intro_not_filed), Toast.LENGTH_SHORT).show()
-                toast = true
-            }
+//            if (TextUtils.isEmpty(binding.debateQuestion.text.toString())){
+//                Toast.makeText(activity, getResources().getString(R.string.question_not_filled), Toast.LENGTH_SHORT).show()
+//                toast = true
+//            }
+//            if (TextUtils.isEmpty(binding.introNewDebat.text.toString())){
+//                Toast.makeText(activity, getResources().getString(R.string.intro_not_filed), Toast.LENGTH_SHORT).show()
+//                toast = true
+//            }
             // Saving data and moving to the second part of the form
             if (toast == false) {
                 viewModel.debate.value?.debateEntity?.title = binding.debateQuestion.text.toString()

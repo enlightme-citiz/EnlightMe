@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
@@ -20,6 +22,8 @@ import androidx.fragment.app.FragmentTransaction
 import developer.android.com.enlightme.databinding.FragmentArgumentPlusSide1Binding
 import developer.android.com.enlightme.databinding.FragmentArgumentPlusSide2Binding
 import kotlinx.android.synthetic.main.fragment_argument_plus_side1.*
+import kotlinx.android.synthetic.main.fragment_argument_side1.view.*
+import kotlinx.android.synthetic.main.fragment_argument_side2.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -128,7 +132,6 @@ class DebateFragment : Fragment() {
             }
     }
 
-
     fun populate_arguments(){
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
@@ -207,8 +210,9 @@ class DebateFragment : Fragment() {
         val newArgFrag: Fragment
         when(side){
             1 -> {
+                val place = viewModel.debate.value?.debateEntity?.side_1_entity?.size ?: -1
                 viewModel.debate.value?.debateEntity?.side_1_entity?.add(debateEntity)
-                newArgFrag = ArgumentSide1Fragment.newInstance(debateEntity.title, debateEntity.description)
+                newArgFrag = ArgumentSide1Fragment.newInstance(debateEntity.title, debateEntity.description, place)
                 if (side1ArgList.isEmpty()){
                     //Constraints with the top element
                     constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, binding.side1ArgContainer.id, ConstraintSet.TOP, 10)
@@ -241,6 +245,30 @@ class DebateFragment : Fragment() {
                 throw IllegalArgumentException("side should be either 1 or 2.")
             }
         }
+    }
+    fun modArgument(side: Int, debateEntity: DebateEntity, edit_arg_pos: Int){
+        when(side) {
+            1 -> {
+                viewModel.debate.value?.debateEntity?.side_1_entity?.set(edit_arg_pos, debateEntity)
+                Log.i("DebateFragment", edit_arg_pos.toString())
+                Log.i("DebateFragment", binding.side1ArgContainer.toString())
+                Log.i("DebateFragment", binding.side1ArgContainer.childCount.toString())
+                val argView = binding.side1ArgContainer.getChildAt(edit_arg_pos+1)
+                argView.findViewById<TextView>(R.id.argument_side1_text).text = debateEntity.title
+                argView.findViewById<TextView>(R.id.argument_side1_description).text = debateEntity.description
+            }
+            2 -> {
+                viewModel.debate.value?.debateEntity?.side_2_entity?.set(edit_arg_pos, debateEntity)
+                val argView = binding.side1ArgContainer.getChildAt(edit_arg_pos)
+                argView.argument_side2_text.text = debateEntity.title
+                argView.argument_side2_description.text = debateEntity.description
+            }
+            else -> {
+                //Log.i("temp_side", side.toString())
+                throw IllegalArgumentException("side should be either 1 or 2.")
+            }
+        }
+        // Redraw the UI or the argument table.
     }
 
 }

@@ -17,6 +17,7 @@ class DebateViewModel : ViewModel() {
     // alertDialogue and debatFragment when creating a new argument
     var temp_debate_entity = DebateEntity()
     var temp_side = 0
+    var edit_arg_pos = -1
 
     init {
         Log.i("DebateViewModel", "DebateViewModel created!")

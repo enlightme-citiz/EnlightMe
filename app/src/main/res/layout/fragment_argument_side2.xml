@@ -16,10 +16,17 @@
                 android:orientation="horizontal" android:gravity="center|center_horizontal">
             <TextView
                     android:id="@+id/argument_side2_text"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:layout_weight="1"
-                    android:gravity="center" android:fontFamily="@font/roboto" android:textColor="@color/side_2_text"
+                    android:gravity="center" android:fontFamily="@font/roboto"
+                    android:textColor="@color/side_2_text"
                     android:textSize="@dimen/base_text_size"/>
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/argument_side2_description"
+                      android:textColor="@color/side_2_text"
+                      android:visibility="gone"
+            />
         </LinearLayout>
         <!-- End Custom Button -->
     </FrameLayout>
