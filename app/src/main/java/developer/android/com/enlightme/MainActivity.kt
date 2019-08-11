@@ -53,7 +53,13 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
             debateFragment.modArgument(viewModel.temp_side,
                 viewModel.temp_debate_entity, viewModel.edit_arg_pos)
         }else{
-            debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
+            val place : Int
+            if(viewModel.temp_side == 1){
+                place = viewModel.debate.value?.debateEntity?.side_1_entity?.size ?: -1
+            }else{
+                place = viewModel.debate.value?.debateEntity?.side_2_entity?.size ?: -1
+            }
+            debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity, place, true)
         }
         viewModel.temp_side = 0
         viewModel.temp_debate_entity = DebateEntity()

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
@@ -137,107 +138,85 @@ class DebateFragment : Fragment() {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         val fragTransaction = fragmentManager?.beginTransaction()
-        // Filling side 1 with arguments
-        var top_elmt_id = R.id.side_1_arg_container
-        for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
-            val arg_frag = ArgumentSide1Fragment().apply {
-                arguments = Bundle().apply {
-                    putString("title", args_1.title)
-                    putString("description", args_1.description)
-                }
-            }
-            side1ArgList.add(arg_frag)
-            // Constraining wit the previous element
-            val constraintSet = ConstraintSet()
-            if (iarg_1 == 0){
-                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
-            }else{
-                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
-            }
-            Log.i("DebateFragment", top_elmt_id.toString())
-            // constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
-            fragTransaction?.add(R.id.side_1_arg_container, arg_frag)
-            top_elmt_id = arg_frag.id
-        }
         //Adding the button to enable adding argument
         addArg1Frag = ArgumentPlusSide1Fragment()
         val constraintSet1 = ConstraintSet()
-        if (viewModel.debate.value?.debateEntity?.side_1_entity?.isEmpty() ?: true){
-            constraintSet1.connect(addArg1Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
-        }else{
-            constraintSet1.connect(addArg1Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
-        }
+        constraintSet1.connect(addArg1Frag.id, ConstraintSet.TOP, binding.side1ArgContainer.id, ConstraintSet.TOP, 10)
         fragTransaction?.add(R.id.side_1_arg_container, addArg1Frag)
-
-        // Filling side 2 with arguments
-        top_elmt_id = R.id.side_2_arg_container
-        for((iarg_2, args_2) in viewModel.debate.value?.debateEntity?.side_2_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
-            val arg_frag = ArgumentSide2Fragment().apply {
-                arguments = Bundle().apply {
-                    putString("title", args_2.title)
-                    putString("description", args_2.description)
-                }
-            }
-            side2ArgList.add(arg_frag)
-            // Constraining wit the previous element
-            val constraintSet = ConstraintSet()
-            if (iarg_2 == 0){
-                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
-            }else{
-                constraintSet.connect(arg_frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
-            }
-            //constraintSet.applyTo(const_layout.findViewById(top_elmt_id))
-            fragTransaction?.add(R.id.side_1_arg_container, arg_frag)
-            top_elmt_id = arg_frag.id
-        }
 
         //Adding the button to enable adding argument
         addArg2Frag = ArgumentPlusSide2Fragment()
-        
         val constraintSet2 = ConstraintSet()
-        if (viewModel.debate.value?.debateEntity?.side_2_entity?.isEmpty() ?: true){
-            constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.TOP, 10)
-        }else{
-            constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, top_elmt_id, ConstraintSet.BOTTOM, 5)
-        }
+        constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, binding.side2ArgContainer.id, ConstraintSet.TOP, 10)
         fragTransaction?.add(R.id.side_2_arg_container, addArg2Frag)?.commit()
+
+        // Filling side 1 with arguments
+        Log.i("DebateFragment", "Side 1")
+        for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
+            this.addArgument(1, args_1, iarg_1, false, addArg1Frag.id)
+        }
+
+        // Filling side 2 with arguments
+        Log.i("DebateFragment", "Side 2")
+        for((iarg_2, args_2) in viewModel.debate.value?.debateEntity?.side_2_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
+            this.addArgument(2, args_2, iarg_2, false, addArg2Frag.id)
+        }
     }
 
     // Add one argument to one side
-    fun addArgument(side: Int, debateEntity: DebateEntity){
-        val constraintSet = ConstraintSet()
+    fun addArgument(side: Int, debateEntity: DebateEntity, place: Int, add_to_viewModel: Boolean, idPlusButton: Int? = null){
+        val constraintSetArg = ConstraintSet()
+        val constraintSetPls = ConstraintSet()
         val fragTransaction = fragmentManager?.beginTransaction()
         val newArgFrag: Fragment
+        Log.i("DebateFragment", side.toString())
+        Log.i("DebateFragment", debateEntity.title)
+        Log.i("DebateFragment", place.toString())
+        Log.i("DebateFragment", binding.side1ArgContainer.childCount.toString())
+        Log.i("DebateFragment", binding.side2ArgContainer.childCount.toString())
+        Log.i("DebateFragment", "---------------------------------------")
         when(side){
             1 -> {
-                val place = viewModel.debate.value?.debateEntity?.side_1_entity?.size ?: -1
-                viewModel.debate.value?.debateEntity?.side_1_entity?.add(debateEntity)
+                //val place = viewModel.debate.value?.debateEntity?.side_1_entity?.size ?: -1
+                if(add_to_viewModel) viewModel.debate.value?.debateEntity?.side_1_entity?.add(debateEntity)
                 newArgFrag = ArgumentSide1Fragment.newInstance(debateEntity.title, debateEntity.description, place)
                 if (side1ArgList.isEmpty()){
                     //Constraints with the top element
-                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, binding.side1ArgContainer.id, ConstraintSet.TOP, 10)
+                    constraintSetArg.connect(newArgFrag.id, ConstraintSet.TOP, binding.side1ArgContainer.id, ConstraintSet.TOP, 10)
                 }else{
                     //Constraints with the top element
-                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, side1ArgList[-1].id, ConstraintSet.BOTTOM, 5)
+                    constraintSetArg.connect(newArgFrag.id, ConstraintSet.TOP, side1ArgList[side1ArgList.size-1].id, ConstraintSet.BOTTOM, 5)
                 }
                 // Constraining the plus button
-                val plusButton = binding.side1ArgContainer.getChildAt(binding.side1ArgContainer.getChildCount()-1)
-                constraintSet.connect(plusButton.id, ConstraintSet.TOP, newArgFrag.id, ConstraintSet.BOTTOM, 5)
+                val plusId :Int
+                if(idPlusButton == null){
+                    plusId = binding.side1ArgContainer.getChildAt(binding.side1ArgContainer.childCount-1).id
+                }else{
+                    plusId = idPlusButton
+                }
+
+                constraintSetPls.connect(plusId, ConstraintSet.TOP, newArgFrag.id, ConstraintSet.BOTTOM, 5)
                 fragTransaction?.add(R.id.side_1_arg_container, newArgFrag)?.commit()
             }
             2 -> {
-                viewModel.debate.value?.debateEntity?.side_2_entity?.add(debateEntity)
-                newArgFrag = ArgumentSide2Fragment.newInstance(debateEntity.title, debateEntity.description)
+                //val place = viewModel.debate.value?.debateEntity?.side_2_entity?.size ?: -1
+                if(add_to_viewModel) viewModel.debate.value?.debateEntity?.side_2_entity?.add(debateEntity)
+                newArgFrag = ArgumentSide2Fragment.newInstance(debateEntity.title, debateEntity.description, place)
                 if (side2ArgList.isEmpty()){
                     //Constraints with the top element
-                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, binding.side2ArgContainer.id, ConstraintSet.TOP, 10)
+                    constraintSetArg.connect(newArgFrag.id, ConstraintSet.TOP, binding.side2ArgContainer.id, ConstraintSet.TOP, 10)
                 }else{
                     //Constraints with the top element
-                    constraintSet.connect(newArgFrag.id, ConstraintSet.TOP, side2ArgList[-1].id, ConstraintSet.BOTTOM, 5)
+                    constraintSetArg.connect(newArgFrag.id, ConstraintSet.TOP, side2ArgList[side2ArgList.size-1].id, ConstraintSet.BOTTOM, 5)
                 }
                 // Constraining the plus button
-                val plusButton = binding.side2ArgContainer.getChildAt(binding.side2ArgContainer.getChildCount()-1)
-                constraintSet.connect(plusButton.id, ConstraintSet.TOP, newArgFrag.id, ConstraintSet.BOTTOM, 5)
+                val plusId :Int
+                if(idPlusButton == null){
+                    plusId = binding.side2ArgContainer.getChildAt(binding.side2ArgContainer.childCount-1).id
+                }else{
+                    plusId = idPlusButton
+                }
+                constraintSetPls.connect(plusId, ConstraintSet.TOP, newArgFrag.id, ConstraintSet.BOTTOM, 5)
                 fragTransaction?.add(R.id.side_2_arg_container, newArgFrag)?.commit()
             }
             else -> {
@@ -250,18 +229,15 @@ class DebateFragment : Fragment() {
         when(side) {
             1 -> {
                 viewModel.debate.value?.debateEntity?.side_1_entity?.set(edit_arg_pos, debateEntity)
-                Log.i("DebateFragment", edit_arg_pos.toString())
-                Log.i("DebateFragment", binding.side1ArgContainer.toString())
-                Log.i("DebateFragment", binding.side1ArgContainer.childCount.toString())
                 val argView = binding.side1ArgContainer.getChildAt(edit_arg_pos+1)
                 argView.findViewById<TextView>(R.id.argument_side1_text).text = debateEntity.title
                 argView.findViewById<TextView>(R.id.argument_side1_description).text = debateEntity.description
             }
             2 -> {
                 viewModel.debate.value?.debateEntity?.side_2_entity?.set(edit_arg_pos, debateEntity)
-                val argView = binding.side1ArgContainer.getChildAt(edit_arg_pos)
-                argView.argument_side2_text.text = debateEntity.title
-                argView.argument_side2_description.text = debateEntity.description
+                val argView = binding.side2ArgContainer.getChildAt(edit_arg_pos+1)
+                argView.findViewById<TextView>(R.id.argument_side2_text).text = debateEntity.title
+                argView.findViewById<TextView>(R.id.argument_side2_description).text = debateEntity.description
             }
             else -> {
                 //Log.i("temp_side", side.toString())

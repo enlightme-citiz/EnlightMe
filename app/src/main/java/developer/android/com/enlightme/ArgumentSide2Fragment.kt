@@ -15,7 +15,8 @@ import developer.android.com.enlightme.databinding.FragmentArgumentSide2Binding
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val TITLE = "title"
-private const val DESCRIPTION = "idArg"
+private const val DESCRIPTION = "description"
+private const val PLACE = "place"
 
 /**
  * A simple [Fragment] subclass.
@@ -30,6 +31,7 @@ class ArgumentSide2Fragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var title: String? = null
     private var description: String? = null
+    private var place: Int = -1
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
 
@@ -38,6 +40,7 @@ class ArgumentSide2Fragment : Fragment() {
         arguments?.let {
             this.title = it.getString(TITLE)
             this.description = it.getString(DESCRIPTION)
+            this.place = it.getInt(PLACE)
             // put argument title to the body of the argument icon
             //argument_side2_text.text = title
         }
@@ -56,14 +59,10 @@ class ArgumentSide2Fragment : Fragment() {
         binding.root.setOnLongClickListener{
             // Long click listener function to edit the argument
             viewModel.temp_side = 2
-            val title = this.title
-            val description = this.description
-            val newArgDialogueFragment = NewArgDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString("title", title)
-                    putString("description", description)
-                }
-            }
+            viewModel.edit_arg_pos = this.place
+            this.title = viewModel.debate.value?.debateEntity?.side_2_entity?.get(this.place)?.title
+            this.description = viewModel.debate.value?.debateEntity?.side_2_entity?.get(this.place)?.description
+            val newArgDialogueFragment = NewArgDialogFragment.newInstance(this.title ?: "", this.description ?: "")
             val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
             newArgDialogueFragment.show(fm, "editArgument")
             true
@@ -117,11 +116,12 @@ class ArgumentSide2Fragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(title: String, description: String) =
+        fun newInstance(title: String, description: String, place: Int) =
             ArgumentSide2Fragment().apply {
                 arguments = Bundle().apply {
                     putString(TITLE, title)
                     putString(DESCRIPTION, description)
+                    putInt(PLACE, place)
                 }
             }
     }
