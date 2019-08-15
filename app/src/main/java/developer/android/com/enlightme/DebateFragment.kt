@@ -4,27 +4,15 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.objects.DebateEntity
-import kotlinx.android.synthetic.main.fragment_main.*
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentTransaction
-import developer.android.com.enlightme.databinding.FragmentArgumentPlusSide1Binding
-import developer.android.com.enlightme.databinding.FragmentArgumentPlusSide2Binding
-import kotlinx.android.synthetic.main.fragment_argument_plus_side1.*
-import kotlinx.android.synthetic.main.fragment_argument_side1.view.*
-import kotlinx.android.synthetic.main.fragment_argument_side2.view.*
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -54,14 +42,13 @@ class DebateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_debate, container, false)
-        setHasOptionsMenu(true)
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
@@ -79,7 +66,13 @@ class DebateFragment : Fragment() {
                 }
             }
         }
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.options_menu, menu)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -30,4 +30,5 @@
     <string name="pseudo_not_filed">Le pseudo doit être spécifié</string>
     <string name="question_not_filled">La question doit être spécifiée</string>
     <string name="intro_not_filed">Une introduction au débat doit être spécifiée</string>
+    <string name="activate_P2P">Créer un réseau</string>
 </resources>
