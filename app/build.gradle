@@ -12,7 +12,7 @@ android {
     }
     defaultConfig {
         applicationId "developer.android.com.enlightme"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -39,7 +39,7 @@ dependencies {
     //ViewModel
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     //MaterialIO
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
 
     // Navigation
     def nav_version = "2.1.0-alpha05"

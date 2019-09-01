@@ -11,6 +11,7 @@
         <action android:id="@+id/action_mainFragment_to_create1Fragment"
                 app:destination="@id/createFragment"
                 app:popUpTo="@id/mainFragment"/>
+        <action android:id="@+id/action_mainFragment_to_joinDebateFragment" app:destination="@id/joinDebateFragment"/>
     </fragment>
     <fragment android:id="@+id/createFragment"
               android:name="developer.android.com.enlightme.Create1Fragment"
@@ -26,7 +27,10 @@
               tools:layout="@layout/fragment_create2">
         <action android:id="@+id/action_create2Fragment_to_debateFragment" app:destination="@id/debateFragment"/>
     </fragment>
-    <fragment android:id="@+id/debateFragment" android:name="developer.android.com.enlightme.DebateFragment"
+    <fragment android:id="@+id/debateFragment" android:name="developer.android.com.enlightme.Debate.DebateFragment"
               android:label="DebateFragment"
               tools:layout="@layout/fragment_debate"/>
+    <fragment android:id="@+id/joinDebateFragment" android:name="developer.android.com.enlightme.JoinDebateFragment"
+              android:label="JoinDebateFragment"
+              tools:layout="@layout/fragment_join_debate"/>
 </navigation>

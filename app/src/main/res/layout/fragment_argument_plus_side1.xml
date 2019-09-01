@@ -12,13 +12,20 @@
                         android:id="@+id/argument_plus_1"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/argument_plus_height"
-                        android:background="@drawable/ripple_arg_plus_side_1"
-                        android:orientation="horizontal" android:gravity="center|center_horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center|center_horizontal">
+                        <!--android:background="@drawable/ripple_arg_plus_side_1"-->
+
                         <LinearLayout
-                                android:background="@drawable/ic_add_white_24dp"
+                                android:id="@+id/ic_add_white_24dp"
                                 android:layout_height="48dp"
                                 android:layout_width="48dp"
-                                android:layout_gravity="center" android:gravity="center" android:orientation="horizontal"/>
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                />
+                        <!--android:background="@drawable/ic_add_white_24dp"-->
+
                 </LinearLayout>
                 <!-- End Custom Button -->
         </FrameLayout>

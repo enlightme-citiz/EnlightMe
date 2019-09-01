@@ -12,14 +12,15 @@
                 android:id="@+id/argument_plus_2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/argument_plus_height"
-                android:background="@drawable/ripple_arg_plus_side_2"
                 android:orientation="horizontal" android:gravity="center|center_horizontal">
+            <!--android:background="@drawable/ripple_arg_plus_side_2"-->
             <LinearLayout
-                    android:background="@drawable/ic_add_black_24dp"
+                    android:id="@+id/ic_add_black_24dp"
                     android:layout_height="48dp"
                     android:layout_width="48dp"
                     android:layout_gravity="center" android:gravity="center"
                     android:orientation="horizontal"/>
+            <!--android:background="@drawable/ic_add_black_24dp"-->
         </LinearLayout>
         <!-- End Custom Button -->
     </FrameLayout>

@@ -1,59 +1,80 @@
-package developer.android.com.enlightme
+package developer.android.com.enlightme.Debate
 
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import developer.android.com.enlightme.DebateViewModel
+import developer.android.com.enlightme.NewArgDialogFragment
+import developer.android.com.enlightme.R
+import developer.android.com.enlightme.databinding.FragmentArgumentSide2Binding
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val TITLE = "title"
+private const val DESCRIPTION = "description"
+private const val PLACE = "place"
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [ArgumentPlusSide2Fragment.OnFragmentInteractionListener] interface
+ * [ArgumentSide2Fragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [ArgumentPlusSide2Fragment.newInstance] factory method to
+ * Use the [ArgumentSide2Fragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
+class ArgumentSide2Fragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var title: String? = null
+    private var description: String? = null
+    private var place: Int = -1
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            this.title = it.getString(TITLE)
+            this.description = it.getString(DESCRIPTION)
+            this.place = it.getInt(PLACE)
+            // put argument title to the body of the argument icon
+            //argument_side2_text.text = title
         }
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = activity?.run {
-            ViewModelProviders.of(this).get(DebateViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
-        // Inflate the layout for this fragment
-        val addArgButtonView = inflater.inflate(R.layout.fragment_argument_plus_side2, container, false)
+        val binding = DataBindingUtil.inflate<FragmentArgumentSide2Binding>(inflater,
+            R.layout.fragment_argument_side2, container, false)
+        binding.argumentSide2Text.text = this.title
         //Attache click event listener to display the Add argument dialogue box
-        val addArgButton = addArgButtonView.findViewById<LinearLayout>(R.id.argument_plus_2)
-        addArgButton.setOnClickListener(this)
-        return addArgButtonView
+        binding.root.setOnLongClickListener{
+            // Long click listener function to edit the argument
+            viewModel.temp_side = 2
+            viewModel.edit_arg_pos = this.place
+            this.title = viewModel.debate.value?.debateEntity?.side_2_entity?.get(this.place)?.title
+            this.description = viewModel.debate.value?.debateEntity?.side_2_entity?.get(this.place)?.description
+            val newArgDialogueFragment = NewArgDialogFragment.newInstance(
+                this.title ?: "",
+                this.description ?: ""
+            )
+            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
+            newArgDialogueFragment.show(fm, "editArgument")
+            true
+        }
+        return binding.root
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -98,22 +119,17 @@ class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ArgumentPlusSide2Fragment.
+         * @return A new instance of fragment ArgumentSide2Fragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ArgumentPlusSide2Fragment().apply {
+        fun newInstance(title: String, description: String, place: Int) =
+            ArgumentSide2Fragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(TITLE, title)
+                    putString(DESCRIPTION, description)
+                    putInt(PLACE, place)
                 }
             }
-    }
-    override fun onClick(v: View) {
-        viewModel.temp_side = 2
-        val newArgDialogueFragment = NewArgDialogFragment()
-        val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
-        newArgDialogueFragment.show(fm, "newArgument")
     }
 }

@@ -1,4 +1,4 @@
-package developer.android.com.enlightme
+package developer.android.com.enlightme.Debate
 
 import android.content.Context
 import android.net.Uri
@@ -10,6 +10,14 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
+import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo
+import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback
+import developer.android.com.enlightme.DebateViewModel
+import developer.android.com.enlightme.MainActivity
+import developer.android.com.enlightme.P2PClasses.P2P
+import developer.android.com.enlightme.R
 import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.objects.DebateEntity
 
@@ -39,7 +47,10 @@ class DebateFragment : Fragment() {
     // Attribut to hold the plus buttons fragments
     private lateinit var addArg1Frag: ArgumentPlusSide1Fragment
     private lateinit var addArg2Frag: ArgumentPlusSide2Fragment
-
+    private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
+        override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {}
+        override fun onEndpointLost(endpointId: String) {}
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -48,7 +59,8 @@ class DebateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_debate, container, false)
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_debate, container, false)
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
@@ -73,6 +85,13 @@ class DebateFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.options_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val p2p = P2P(requireContext(), endpointDiscoveryCallback)
+        val userName = viewModel.debate.value?.debateEntity?.title ?: "Sans nom"
+        p2p.startAdvertising(userName)
+        return super.onOptionsItemSelected(item)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -144,13 +163,11 @@ class DebateFragment : Fragment() {
         fragTransaction?.add(R.id.side_2_arg_container, addArg2Frag)?.commit()
 
         // Filling side 1 with arguments
-        Log.i("DebateFragment", "Side 1")
         for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
             this.addArgument(1, args_1, iarg_1, false, addArg1Frag.id)
         }
 
         // Filling side 2 with arguments
-        Log.i("DebateFragment", "Side 2")
         for((iarg_2, args_2) in viewModel.debate.value?.debateEntity?.side_2_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
             this.addArgument(2, args_2, iarg_2, false, addArg2Frag.id)
         }
@@ -162,17 +179,16 @@ class DebateFragment : Fragment() {
         val constraintSetPls = ConstraintSet()
         val fragTransaction = fragmentManager?.beginTransaction()
         val newArgFrag: Fragment
-        Log.i("DebateFragment", side.toString())
-        Log.i("DebateFragment", debateEntity.title)
-        Log.i("DebateFragment", place.toString())
-        Log.i("DebateFragment", binding.side1ArgContainer.childCount.toString())
-        Log.i("DebateFragment", binding.side2ArgContainer.childCount.toString())
-        Log.i("DebateFragment", "---------------------------------------")
         when(side){
             1 -> {
                 //val place = viewModel.debate.value?.debateEntity?.side_1_entity?.size ?: -1
                 if(add_to_viewModel) viewModel.debate.value?.debateEntity?.side_1_entity?.add(debateEntity)
-                newArgFrag = ArgumentSide1Fragment.newInstance(debateEntity.title, debateEntity.description, place)
+                newArgFrag =
+                    ArgumentSide1Fragment.newInstance(
+                        debateEntity.title,
+                        debateEntity.description,
+                        place
+                    )
                 if (side1ArgList.isEmpty()){
                     //Constraints with the top element
                     constraintSetArg.connect(newArgFrag.id, ConstraintSet.TOP, binding.side1ArgContainer.id, ConstraintSet.TOP, 10)
@@ -194,7 +210,12 @@ class DebateFragment : Fragment() {
             2 -> {
                 //val place = viewModel.debate.value?.debateEntity?.side_2_entity?.size ?: -1
                 if(add_to_viewModel) viewModel.debate.value?.debateEntity?.side_2_entity?.add(debateEntity)
-                newArgFrag = ArgumentSide2Fragment.newInstance(debateEntity.title, debateEntity.description, place)
+                newArgFrag =
+                    ArgumentSide2Fragment.newInstance(
+                        debateEntity.title,
+                        debateEntity.description,
+                        place
+                    )
                 if (side2ArgList.isEmpty()){
                     //Constraints with the top element
                     constraintSetArg.connect(newArgFrag.id, ConstraintSet.TOP, binding.side2ArgContainer.id, ConstraintSet.TOP, 10)

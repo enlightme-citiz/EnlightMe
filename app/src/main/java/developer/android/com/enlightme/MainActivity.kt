@@ -3,16 +3,14 @@ package developer.android.com.enlightme
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.constraintlayout.widget.ConstraintSet
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import developer.android.com.enlightme.Debate.*
 import developer.android.com.enlightme.databinding.ActivityMainBinding
-import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.objects.DebateEntity
 
 class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionListener,
@@ -24,7 +22,9 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
     ArgumentSide1Fragment.OnFragmentInteractionListener,
     ArgumentSide2Fragment.OnFragmentInteractionListener,
     NewArgDialogFragment.OnFragmentInteractionListener,
-    NewArgDialogFragment.NoticeDialogListener {
+    JoinDebateFragment.OnFragmentInteractionListener,
+    ItemBtListFragment.OnFragmentInteractionListener,
+    NewArgDialogFragment.NoticeDialogListener{
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: DebateViewModel

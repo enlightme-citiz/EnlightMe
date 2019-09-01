@@ -44,6 +44,9 @@ class MainFragment : Fragment() {
         binding.navButtonCreer.setOnClickListener { view : View ->
             view.findNavController().navigate(R.id.action_mainFragment_to_create1Fragment)
         }
+        binding.navButtonRejoindre.setOnClickListener{view : View ->
+            view.findNavController().navigate(R.id.action_mainFragment_to_joinDebateFragment)
+        }
         return binding.root
     }
 

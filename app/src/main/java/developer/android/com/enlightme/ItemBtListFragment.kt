@@ -8,65 +8,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
-import developer.android.com.enlightme.databinding.FragmentArgumentSide2Binding
+import developer.android.com.enlightme.databinding.FragmentItemBtListBinding
+import developer.android.com.enlightme.databinding.FragmentJoinDebateBinding
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val TITLE = "title"
-private const val DESCRIPTION = "description"
-private const val PLACE = "place"
+private const val NAME_BT_NETWORK = "name_bt_network"
+private const val NB_ATTENDEES = "nb_attendees"
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [ArgumentSide2Fragment.OnFragmentInteractionListener] interface
+ * [ItemBtListFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [ArgumentSide2Fragment.newInstance] factory method to
+ * Use the [ItemBtListFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class ArgumentSide2Fragment : Fragment() {
+class ItemBtListFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var title: String? = null
-    private var description: String? = null
-    private var place: Int = -1
+    var name_bt_network: String? = null
+    var nb_attendees: Int = 0
+    private lateinit var binding: FragmentItemBtListBinding
     private var listener: OnFragmentInteractionListener? = null
-    private lateinit var viewModel: DebateViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            this.title = it.getString(TITLE)
-            this.description = it.getString(DESCRIPTION)
-            this.place = it.getInt(PLACE)
-            // put argument title to the body of the argument icon
-            //argument_side2_text.text = title
+            name_bt_network = it.getString(NAME_BT_NETWORK)
+            nb_attendees = it.getInt(NB_ATTENDEES)
         }
-        viewModel = activity?.run {
-            ViewModelProviders.of(this).get(DebateViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentArgumentSide2Binding>(inflater, R.layout.fragment_argument_side2, container, false)
-        binding.argumentSide2Text.text = this.title
-        //Attache click event listener to display the Add argument dialogue box
-        binding.root.setOnLongClickListener{
-            // Long click listener function to edit the argument
-            viewModel.temp_side = 2
-            viewModel.edit_arg_pos = this.place
-            this.title = viewModel.debate.value?.debateEntity?.side_2_entity?.get(this.place)?.title
-            this.description = viewModel.debate.value?.debateEntity?.side_2_entity?.get(this.place)?.description
-            val newArgDialogueFragment = NewArgDialogFragment.newInstance(this.title ?: "", this.description ?: "")
-            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
-            newArgDialogueFragment.show(fm, "editArgument")
-            true
-        }
+        // Inflate the layout for this fragment
+        // Add nb_attendees and name_bt_network to the fragment
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_item_bt_list, container, false)
+        binding.nameBtNetwork.text = name_bt_network
+        binding.nbAttendees.text = nb_attendees.toString()
         return binding.root
     }
 
@@ -112,16 +96,15 @@ class ArgumentSide2Fragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ArgumentSide2Fragment.
+         * @return A new instance of fragment itemBtListFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(title: String, description: String, place: Int) =
-            ArgumentSide2Fragment().apply {
+        fun newInstance(name_bt_network: String, nb_attendees: Int) =
+            ItemBtListFragment().apply {
                 arguments = Bundle().apply {
-                    putString(TITLE, title)
-                    putString(DESCRIPTION, description)
-                    putInt(PLACE, place)
+                    putString(NAME_BT_NETWORK, name_bt_network)
+                    putInt(NB_ATTENDEES, nb_attendees)
                 }
             }
     }
