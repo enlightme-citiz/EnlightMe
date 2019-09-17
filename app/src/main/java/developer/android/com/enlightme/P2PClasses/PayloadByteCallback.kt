@@ -1,15 +1,39 @@
 package developer.android.com.enlightme.P2PClasses
 
+import android.content.Context
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate
 import com.google.android.gms.nearby.connection.Payload
 import com.google.android.gms.nearby.connection.PayloadCallback
+import developer.android.com.enlightme.DebateViewModel
+import developer.android.com.enlightme.objects.Debate
+import developer.android.com.enlightme.objects.HistDebate
+import developer.android.com.enlightme.objects.HistElt
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import java.lang.NumberFormatException
 
 
-class PayloadByteCallback : PayloadCallback() {
+class PayloadByteCallback(viewModel: DebateViewModel, context: Context) : PayloadCallback() {
+    lateinit var viewModel: DebateViewModel
+    lateinit var context: Context
     override fun onPayloadReceived(endpointId: String, payload: Payload) {
         // This always gets the full data of the payload. Will be null if it's not a BYTES
         // payload. You can check the payload type with payload.getType().
-        val receivedBytes = payload.asBytes()
+        val receivedBytes = payload.asBytes() ?: ByteArray(0)
+        if(receivedBytes.toString() == "Require debate"){
+            viewModel.send_hist_debate(context,listOf(endpointId))
+            return
+        }
+        // Try to get debate
+        val json = Json(JsonConfiguration.Stable)
+        val debate = json.parse(Debate.serializer(), String(receivedBytes, Charsets.UTF_8))
+        if (viewModel.is_updated == false){
+            viewModel.debate?.value?.listAttendees = debate.listAttendees
+            viewModel.debate?.value?.debateEntity = debate.debateEntity
+        }
+        //Try to get updates (Histlist)
+        val hist_debate = json.parse(HistDebate.serializer(),String(receivedBytes, Charsets.UTF_8))
     }
 
     override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {

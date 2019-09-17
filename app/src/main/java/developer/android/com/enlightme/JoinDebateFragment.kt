@@ -8,18 +8,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback
 import developer.android.com.enlightme.P2PClasses.P2P
 import developer.android.com.enlightme.databinding.FragmentJoinDebateBinding
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -31,22 +28,20 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class JoinDebateFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var binding: FragmentJoinDebateBinding
     private var listener: OnFragmentInteractionListener? = null
-    var listNet = mutableMapOf<String, MutableList<String>>()
     var listNetFrag = mutableListOf<ItemBtListFragment>()
+    lateinit var p2p: P2P
+    private lateinit var viewModel: JoinDebateViewModel
 
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-            Log.i("JoinDebateFragment", info.toString())
-            if(listNet[info.endpointName] == null){
+            if(viewModel.listNet[info.endpointName] == null){
                 //Update listNet map
-                listNet.plusAssign(Pair(info.endpointName, mutableListOf(endpointId)))
+                viewModel.listNet.plusAssign(Pair(info.endpointName, mutableListOf(endpointId)))
                 val fragTransaction = fragmentManager?.beginTransaction()
                 val newNetworkItem = ItemBtListFragment.newInstance(info.endpointName, 1)
+                //Positioning the network entry in the list
                 val constraintSet = ConstraintSet()
                 if(listNetFrag.isEmpty()){
                     constraintSet.connect(newNetworkItem.id,
@@ -59,10 +54,12 @@ class JoinDebateFragment : Fragment() {
                 }
                 fragTransaction?.add(binding.listNetwork.id, newNetworkItem)?.commit()
                 listNetFrag.add(listNetFrag.lastIndex+1, newNetworkItem)
-
             }else {
-                if (!(listNet[info.endpointName]?.contains(endpointId) ?: false)) {
-                    listNet[info.endpointName]?.add(listNet[info.endpointName]!!.lastIndex+1, endpointId)
+                if (!(viewModel.listNet[info.endpointName]?.contains(endpointId) ?: false)) {
+                    viewModel.listNet[info.endpointName]?.add(viewModel.listNet[info.endpointName]!!.lastIndex+1,
+                        endpointId)
+                    Log.i("JoinDebateFragment", "updated viewModel.listNet[info.endpointName]")
+                    Log.i("JoinDebateFragment", viewModel.listNet[info.endpointName].toString())
                     for (frag in listNetFrag){
                         if (frag.name_bt_network == info.endpointName){
                             frag.nb_attendees += 1
@@ -74,7 +71,7 @@ class JoinDebateFragment : Fragment() {
         override fun onEndpointLost(endpointId: String) {
             //get the network name(s) by going through the list
             var list_name = mutableListOf<String>()
-            for ((name, list_id) in listNet){
+            for ((name, list_id) in viewModel.listNet){
                 if (list_id.contains(endpointId)){
                     list_name.add(name)
                     //remove the endopintId where it appear
@@ -118,8 +115,6 @@ class JoinDebateFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -127,14 +122,21 @@ class JoinDebateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(JoinDebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_join_debate, container, false)
-        val p2p = P2P(requireContext(), endpointDiscoveryCallback)
+        p2p = P2P(requireContext(), endpointDiscoveryCallback)
         p2p.listAvailablePeers()
+        if(viewModel.userName == ""){
+            val provideUserNameFragment = ProvideUserNameFragment()
+            val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
+            provideUserNameFragment.show(fm, "provideUserName")
+        }
         return binding.root
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -165,7 +167,6 @@ class JoinDebateFragment : Fragment() {
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -178,13 +179,10 @@ class JoinDebateFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment JoinDebateFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             JoinDebateFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }

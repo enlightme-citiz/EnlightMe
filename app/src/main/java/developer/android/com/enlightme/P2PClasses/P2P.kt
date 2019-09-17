@@ -13,7 +13,7 @@ class P2P(context: Context, endpointDiscoveryCallback : EndpointDiscoveryCallbac
     val context = context
     val endpointDiscoveryCallback = endpointDiscoveryCallback
     val connectionsClient = Nearby.getConnectionsClient(context)
-    private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
+    val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
             // Automatically accept the connection on both sides.
             // connectionsClient.acceptConnection(endpointId, PayloadByteCallback())

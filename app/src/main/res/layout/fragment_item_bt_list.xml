@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                 xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                 xmlns:tools="http://schemas.android.com/tools"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
                  tools:context=".ItemBtListFragment">
 
         <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="72dp" android:orientation="horizontal">
+                      android:layout_height="72dp" android:orientation="horizontal"
+                      android:id="@+id/item_bt_list_layout">
 
             <ImageView
                     android:src="@android:drawable/stat_sys_data_bluetooth"
@@ -18,15 +20,18 @@
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="match_parent"
                           android:orientation="vertical"
-                          android:layout_marginLeft="32dp">
+                          android:layout_marginLeft="32dp"
+                          android:background="@color/transparent">
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="32dp" android:id="@+id/name_bt_network" android:layout_weight="0"
-                        android:layout_marginLeft="0dp" android:textColor="@color/primary_text_color"/>
+                        android:layout_marginLeft="0dp" android:textColor="@color/primary_text_color"
+                        android:background="@color/transparent"/>
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="20dp" android:id="@+id/nb_attendees" android:layout_weight="0"
-                        android:layout_marginLeft="0dp" android:textColor="@color/secondary_text_color"/>
+                        android:layout_marginLeft="0dp" android:textColor="@color/secondary_text_color"
+                        android:background="@color/transparent"/>
             </LinearLayout>
         </LinearLayout>
 

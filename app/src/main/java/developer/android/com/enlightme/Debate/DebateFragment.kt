@@ -22,10 +22,6 @@ import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.objects.DebateEntity
 
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -36,7 +32,6 @@ import developer.android.com.enlightme.objects.DebateEntity
  *
  */
 class DebateFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private lateinit var viewModel: DebateViewModel
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var binding: FragmentDebateBinding
@@ -68,16 +63,16 @@ class DebateFragment : Fragment() {
         binding.side2.text = viewModel.debate.value?.debateEntity?.side_2.toString()
         binding.debateQuestion.setText(viewModel.debate.value?.debateEntity?.title.toString())
         this.populate_arguments()
-        val debateFragmentObj = this.fragmentManager?.findFragmentById(this.id)
-        activity?.run {
-            if(this is MainActivity){
-                if(debateFragmentObj is DebateFragment){
-                    this.debateFragment = debateFragmentObj
-                }else{
-                    throw IllegalArgumentException("debateFragment should be of class DebateFragment.")
-                }
-            }
-        }
+        // val debateFragmentObj = this.fragmentManager?.findFragmentById(this.id)
+        // activity?.run {
+        //     if(this is MainActivity){
+        //         if(debateFragmentObj is DebateFragment){
+        //             this.debateFragment = debateFragmentObj
+        //         }else{
+        //             throw IllegalArgumentException("debateFragment should be of class DebateFragment.")
+        //         }
+        //     }
+        // }
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -94,7 +89,6 @@ class DebateFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -125,19 +119,10 @@ class DebateFragment : Fragment() {
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment DebateFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
         fun newInstance() =
             DebateFragment().apply {
                 arguments = Bundle().apply {
@@ -164,25 +149,23 @@ class DebateFragment : Fragment() {
 
         // Filling side 1 with arguments
         for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
-            this.addArgument(1, args_1, iarg_1, false, addArg1Frag.id)
+            this.addArgument(1, args_1, iarg_1, addArg1Frag.id)
         }
 
         // Filling side 2 with arguments
         for((iarg_2, args_2) in viewModel.debate.value?.debateEntity?.side_2_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
-            this.addArgument(2, args_2, iarg_2, false, addArg2Frag.id)
+            this.addArgument(2, args_2, iarg_2, addArg2Frag.id)
         }
     }
 
     // Add one argument to one side
-    fun addArgument(side: Int, debateEntity: DebateEntity, place: Int, add_to_viewModel: Boolean, idPlusButton: Int? = null){
+    fun addArgument(side: Int, debateEntity: DebateEntity, place: Int, idPlusButton: Int? = null){
         val constraintSetArg = ConstraintSet()
         val constraintSetPls = ConstraintSet()
         val fragTransaction = fragmentManager?.beginTransaction()
         val newArgFrag: Fragment
         when(side){
             1 -> {
-                //val place = viewModel.debate.value?.debateEntity?.side_1_entity?.size ?: -1
-                if(add_to_viewModel) viewModel.debate.value?.debateEntity?.side_1_entity?.add(debateEntity)
                 newArgFrag =
                     ArgumentSide1Fragment.newInstance(
                         debateEntity.title,
@@ -208,8 +191,6 @@ class DebateFragment : Fragment() {
                 fragTransaction?.add(R.id.side_1_arg_container, newArgFrag)?.commit()
             }
             2 -> {
-                //val place = viewModel.debate.value?.debateEntity?.side_2_entity?.size ?: -1
-                if(add_to_viewModel) viewModel.debate.value?.debateEntity?.side_2_entity?.add(debateEntity)
                 newArgFrag =
                     ArgumentSide2Fragment.newInstance(
                         debateEntity.title,

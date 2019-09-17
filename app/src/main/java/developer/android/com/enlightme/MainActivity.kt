@@ -24,7 +24,9 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
     NewArgDialogFragment.OnFragmentInteractionListener,
     JoinDebateFragment.OnFragmentInteractionListener,
     ItemBtListFragment.OnFragmentInteractionListener,
-    NewArgDialogFragment.NoticeDialogListener{
+    ProvideUserNameFragment.OnFragmentInteractionListener,
+    NewArgDialogFragment.NoticeDialogListener,
+    ProvideUserNameFragment.NoticeDialogListener{
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: DebateViewModel
@@ -59,7 +61,8 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
             }else{
                 place = viewModel.debate.value?.debateEntity?.side_2_entity?.size ?: -1
             }
-            debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity, place, true)
+            viewModel.debate?.value?.debateEntity?.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
+            debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity, place)
         }
         viewModel.temp_side = 0
         viewModel.temp_debate_entity = DebateEntity()

@@ -33,4 +33,9 @@
     <fragment android:id="@+id/joinDebateFragment" android:name="developer.android.com.enlightme.JoinDebateFragment"
               android:label="JoinDebateFragment"
               tools:layout="@layout/fragment_join_debate"/>
+    <dialog android:id="@+id/provideUserNameFragment"
+            android:name="developer.android.com.enlightme.ProvideUserNameFragment"
+            android:label="ProvideUserNameFragment">
+        <action android:id="@+id/action_provideUserNameFragment_to_mainFragment" app:destination="@id/mainFragment"/>
+    </dialog>
 </navigation>

@@ -3,16 +3,20 @@ package developer.android.com.enlightme
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.nearby.Nearby
+import com.google.android.gms.nearby.connection.*
+import developer.android.com.enlightme.P2PClasses.PayloadByteCallback
 import developer.android.com.enlightme.databinding.FragmentItemBtListBinding
-import developer.android.com.enlightme.databinding.FragmentJoinDebateBinding
 
-
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val NAME_BT_NETWORK = "name_bt_network"
 private const val NB_ATTENDEES = "nb_attendees"
@@ -26,12 +30,41 @@ private const val NB_ATTENDEES = "nb_attendees"
  * create an instance of this fragment.
  *
  */
-class ItemBtListFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class ItemBtListFragment : Fragment(), View.OnClickListener{
     var name_bt_network: String? = null
     var nb_attendees: Int = 0
     private lateinit var binding: FragmentItemBtListBinding
     private var listener: OnFragmentInteractionListener? = null
+    private lateinit var viewModel: JoinDebateViewModel
+    private lateinit var viewModelDebate: DebateViewModel
+    val payloadCallback = PayloadByteCallback()
+    val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
+        override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
+            Nearby.getConnectionsClient(requireContext()).acceptConnection(endpointId, payloadCallback)
+            // Automatically accept the connection on both sides.
+        }
+        override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
+            when (result.status.statusCode) {
+                ConnectionsStatusCodes.STATUS_OK -> {
+                    Log.i("ItemBtListFragment", "Connection successful")
+                }
+                ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED -> {
+                    Log.i("ItemBtListFragment", "Connection rejected")
+                }
+                ConnectionsStatusCodes.STATUS_ERROR -> {
+                    Log.i("ItemBtListFragment", "Unknown error")
+                }
+            }// We're connected! Can now start sending and receiving data.
+            // The connection was rejected by one or both sides.
+            // The connection broke before it was able to be accepted.
+            // Unknown status code
+        }
+        override fun onDisconnected(endpointId: String) {
+            Log.i("ItemBtListFragment", "Disconnected from $endpointId.")
+            // We've been disconnected from this endpoint. No more data can be
+            // sent or received.
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,16 +78,62 @@ class ItemBtListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(JoinDebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
         // Add nb_attendees and name_bt_network to the fragment
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_item_bt_list, container, false)
         binding.nameBtNetwork.text = name_bt_network
         binding.nbAttendees.text = nb_attendees.toString()
+        binding.root.setOnClickListener(this)
+        binding.root.background = AppCompatResources.getDrawable(requireContext(),
+            R.drawable.ripple_item_bt_list)
         return binding.root
     }
+    fun connectNetwork(){
+        Log.i("ItemBtListFragment", viewModel.listNet[name_bt_network].toString())
+        //For each endpoint of the network, we request a connection to it.
+        var lstEP = (viewModel.listNet[name_bt_network] ?: mutableListOf()).toMutableList()
+        for (i in 0..lstEP.size) {
+            val ep = lstEP[0]
+            val cog = Nearby.getConnectionsClient(requireContext())
+            val co = cog.requestConnection(viewModel.userName, ep, connectionLifecycleCallback)
+            co.addOnSuccessListener{
+                if(lstEP.remove(ep)){
+                    Toast.makeText(requireContext(), "Connexion à $ep établie", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(requireContext(), "Impossible de supprimer $ep", Toast.LENGTH_SHORT).show()
+                }
+            }
+            co.addOnFailureListener{
+                Log.i("ItemBtListFragment", it.message)
+                if(it.message != "8003: STATUS_ALREADY_CONNECTED_TO_ENDPOINT"){
+                    Toast.makeText(requireContext(), "Connexion à $ep échouée. Nouvelle tentative dans 5s.", Toast.LENGTH_SHORT).show()
+                    Thread.sleep(5_000)
+                    connectNetwork()
+                }
+            }
+        }
+    }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    override fun onClick(v: View) {
+        //Establishing communication
+        connectNetwork()
+        // Initiate viewModel to store debate information
+        viewModelDebate = activity?.run {
+            ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
+        //Query debate from other's debateViewModel.
+        val net = viewModel.listNet[name_bt_network] ?: listOf()
+        loop@ for(n in net){
+            val payload = Payload.fromBytes("Require debate".toByteArray())
+            Nearby.getConnectionsClient(requireContext()).sendPayload(n, payload)
+            Thread.sleep(1_000)
+            if(viewModelDebate.is_updated == true) break@loop
+        }
+        //Update it in viewModelDebate
+    }
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -85,7 +164,6 @@ class ItemBtListFragment : Fragment() {
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -98,7 +176,6 @@ class ItemBtListFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment itemBtListFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(name_bt_network: String, nb_attendees: Int) =
             ItemBtListFragment().apply {

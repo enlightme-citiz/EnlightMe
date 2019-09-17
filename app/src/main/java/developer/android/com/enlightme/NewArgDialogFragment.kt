@@ -20,8 +20,6 @@ import androidx.lifecycle.ViewModelProviders
 import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.databinding.FragmentNewArgDialogBinding
 
-
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_TITLE = "title"
 private const val ARG_DESCRIPTION = "description"
@@ -45,7 +43,6 @@ class NewArgDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("NewArgDialogFragment", "onCreate")
         arguments?.let {
             title = it.getString(ARG_TITLE)
             description = it.getString(ARG_DESCRIPTION)
@@ -56,17 +53,14 @@ class NewArgDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i("NewArgDialogFragment", "onCreateView")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_arg_dialog, container, false)
         return binding.root
     }
 
     override fun onResume() {
-        Log.i("NewArgDialogFragment", "onResume")
         super.onResume()
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -111,12 +105,10 @@ class NewArgDialogFragment : DialogFragment() {
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Log.i("NewArgDialogFragment", "onCreateDialog")
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")

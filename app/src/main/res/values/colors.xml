@@ -11,4 +11,5 @@
     <color name="side_2_text">#494949</color>
     <color name="ripple_side_1_butt">#00748A</color>
     <color name="ripple_side_2_butt">#3DCDE9</color>
+    <color name="transparent">#003C3C3C</color>
 </resources>

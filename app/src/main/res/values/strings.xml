@@ -9,7 +9,6 @@
     <string name="hint_new_question">Question à deux réponses possibles</string>
     <string name="hint_intro_new_debat">Introduction au débat</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="possible_answers_title">Réponses possibles</string>
     <string name="possible_answers_para">Donner les réponses possibles à la question du débat. Par exemple \"pour\" ou
@@ -32,4 +31,8 @@
     <string name="intro_not_filed">Une introduction au débat doit être spécifiée</string>
     <string name="activate_P2P">Créer un réseau</string>
     <string name="join_debate_title">Liste des débats en réseau</string>
+    <string name="provide_user_name_title">Pseudo:</string>
+    <string name="provide_user_name_hint">Entrez votre pseudo</string>*
+    <string name="provide_user_name_ok">Ok</string>
+    <string name="provide_user_name_cancel">Annuler</string>
 </resources>
