@@ -30,9 +30,18 @@ class DebateViewModel : ViewModel() {
     // To check wether the viewModel is up to date
     var is_updated = false
 
-    fun send_hist_debate(context: Context, list_endpointId:List<String>){
+    fun send_update(context: Context, list_endpointId:List<String>){
         val json = Json(JsonConfiguration.Stable)
-        val pld = Payload.fromBytes(json.stringify(HistDebate.serializer(),hist_debate).toByteArray(Charsets.UTF_8))
+        // TODO Intitialize val state_vector
+        val update_payload = UpdatePayload(hist_debate.hist_debate[hist_debate.hist_debate.size-1], state_vector)
+        val pld = Payload.fromBytes(json.stringify(UpdatePayload.serializer(),
+            update_payload).toByteArray(Charsets.UTF_8))
         Nearby.getConnectionsClient(context).sendPayload(list_endpointId, pld)
+    }
+    fun applyUpdateItem(updatePayload: UpdatePayload){
+        val hist_elt = updatePayload.hist_elt
+        val state_vector = updatePayload.state_vector
+        //TODO apply update
+        // Check that the number of change made by the author of hist_elt is >
     }
 }

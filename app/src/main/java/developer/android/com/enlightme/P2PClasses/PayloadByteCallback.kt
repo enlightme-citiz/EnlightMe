@@ -1,17 +1,15 @@
 package developer.android.com.enlightme.P2PClasses
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate
 import com.google.android.gms.nearby.connection.Payload
 import com.google.android.gms.nearby.connection.PayloadCallback
 import developer.android.com.enlightme.DebateViewModel
 import developer.android.com.enlightme.objects.Debate
 import developer.android.com.enlightme.objects.HistDebate
-import developer.android.com.enlightme.objects.HistElt
+import developer.android.com.enlightme.objects.UpdatePayload
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import java.lang.NumberFormatException
 
 
 class PayloadByteCallback(viewModel: DebateViewModel, context: Context) : PayloadCallback() {
@@ -22,7 +20,7 @@ class PayloadByteCallback(viewModel: DebateViewModel, context: Context) : Payloa
         // payload. You can check the payload type with payload.getType().
         val receivedBytes = payload.asBytes() ?: ByteArray(0)
         if(receivedBytes.toString() == "Require debate"){
-            viewModel.send_hist_debate(context,listOf(endpointId))
+            viewModel.send_update(context,listOf(endpointId))
             return
         }
         // Try to get debate
@@ -33,7 +31,8 @@ class PayloadByteCallback(viewModel: DebateViewModel, context: Context) : Payloa
             viewModel.debate?.value?.debateEntity = debate.debateEntity
         }
         //Try to get updates (Histlist)
-        val hist_debate = json.parse(HistDebate.serializer(),String(receivedBytes, Charsets.UTF_8))
+        val updatePayload = json.parse(UpdatePayload.serializer(),String(receivedBytes, Charsets.UTF_8))
+        viewModel.applyUpdateItem(updatePayload)
     }
 
     override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {

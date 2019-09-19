@@ -30,4 +30,11 @@ class DebateEntity {
             }
         }
     }
+    //TODO add other functions like:
+    // delete argument in side entities
+    // del in title
+    // add in title
+    // del in description
+    // add in description
+
 }

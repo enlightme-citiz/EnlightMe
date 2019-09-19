@@ -54,6 +54,7 @@ class NewArgDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_arg_dialog, container, false)
+        //TODO create some change listener to send the modification the network and remove the manual updating of the viewModel.
         return binding.root
     }
 
