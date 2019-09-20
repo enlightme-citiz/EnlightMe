@@ -61,10 +61,19 @@ class NewArgDialogFragment : DialogFragment() {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                //Fire call to change and update in viewModel
+                //TODO Fire call to change and update in viewModel. Should be done with the right side and position in
+                // this and current_level in debate
                 
             }
             })
+        binding.newArgDialogDescription.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                //Fire call to change and update in viewModel
+
+            }
+        })
         return binding.root
     }
 
@@ -138,6 +147,7 @@ class NewArgDialogFragment : DialogFragment() {
                     R.string.new_arg_dialogue_ok
                 ) { dialog, id ->
                     // copy argument title and description in the temp_debate_entity of DebateViewModel
+                    // TODO trace the right dabate_entity using the current_level of debate and the place and side passed as class parameter
                     viewModel.temp_debate_entity.title =
                         dialogView.findViewById<EditText>(R.id.new_arg_dialog_title).text.toString()
                     viewModel.temp_debate_entity.description =
@@ -152,20 +162,10 @@ class NewArgDialogFragment : DialogFragment() {
             if (title != null) {
                 dialogView.findViewById<EditText>(R.id.new_arg_dialog_title)
                     .setText(title.toString(), TextView.BufferType.EDITABLE)
-                Log.i(
-                    "NewArgDialogFragment",
-                    dialogView.findViewById<EditText>(R.id.new_arg_dialog_title).text.toString()
-                )
-                //Log.i("NewArgDialogFragment", title)
             }
             if (description != null) {
                 dialogView.findViewById<EditText>(R.id.new_arg_dialog_description)
                     .setText(description.toString(), TextView.BufferType.EDITABLE)
-                Log.i(
-                    "NewArgDialogFragment",
-                    dialogView.findViewById<EditText>(R.id.new_arg_dialog_description).text.toString()
-                )
-                //Log.i("NewArgDialogFragment", description)
             }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
@@ -182,6 +182,7 @@ class NewArgDialogFragment : DialogFragment() {
         fun newInstance(title: String, description: String) =
             NewArgDialogFragment().apply {
                 arguments = Bundle().apply {
+                    // TODO add the argument position and side to find it back in view model
                     putString(ARG_TITLE, title)
                     putString(ARG_DESCRIPTION, description)
                 }

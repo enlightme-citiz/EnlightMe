@@ -65,6 +65,7 @@ class ArgumentSide1Fragment : Fragment() {
             viewModel.edit_arg_pos = this.place
             this.title = viewModel.debate.value?.debateEntity?.side_1_entity?.get(this.place)?.title
             this.description = viewModel.debate.value?.debateEntity?.side_1_entity?.get(this.place)?.description
+            // TODO send the position and side of ArgumentSide1 object to the constructor of NewArgDialogFragment
             val newArgDialogueFragment = NewArgDialogFragment.newInstance(
                 this.title ?: "",
                 this.description ?: ""
