@@ -166,6 +166,7 @@ class DebateFragment : Fragment() {
         val newArgFrag: Fragment
         when(side){
             1 -> {
+                // TODO add the debateEntity object as a parameter to ArgumentSide1Fragment
                 newArgFrag =
                     ArgumentSide1Fragment.newInstance(
                         debateEntity.title,
@@ -191,6 +192,7 @@ class DebateFragment : Fragment() {
                 fragTransaction?.add(R.id.side_1_arg_container, newArgFrag)?.commit()
             }
             2 -> {
+                // TODO add the debateEntity object as a parameter to ArgumentSide1Fragment
                 newArgFrag =
                     ArgumentSide2Fragment.newInstance(
                         debateEntity.title,

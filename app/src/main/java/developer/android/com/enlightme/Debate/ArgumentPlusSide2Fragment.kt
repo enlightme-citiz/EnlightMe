@@ -31,6 +31,7 @@ class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
     private lateinit var binding: FragmentArgumentPlusSide2Binding
+    // TODO add the debateEntity object as a parameter to constructor. Stringify it if necessary
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +52,7 @@ class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
         binding.argumentPlus2.setOnClickListener(this)
         binding.argumentPlus2.background = AppCompatResources.getDrawable(requireContext(),
             R.drawable.ripple_arg_plus_side_2)
-        binding.icAddBlack24dp.background = AppCompatResources.getDrawable(requireContext(),
+        binding.ic_add_black_24dp.background = AppCompatResources.getDrawable(requireContext(),
             R.drawable.ic_add_black_24dp)
         return binding.root
     }
@@ -87,7 +88,9 @@ class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
             }
     }
     override fun onClick(v: View) {
+        // TODO create the argument in view modele here (see MainActivity onDialogPositiveClick function)
         viewModel.temp_side = 2
+        // TODO send the freshlly created ArgumentSide1 or ArgumentSide2 object to the constructor of NewArgDialogFragment
         val newArgDialogueFragment = NewArgDialogFragment()
         val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
         newArgDialogueFragment.show(fm, "newArgument")
