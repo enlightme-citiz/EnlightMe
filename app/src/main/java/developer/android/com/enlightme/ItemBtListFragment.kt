@@ -35,13 +35,14 @@ class ItemBtListFragment : Fragment(), View.OnClickListener{
     var nb_attendees: Int = 0
     private lateinit var binding: FragmentItemBtListBinding
     private var listener: OnFragmentInteractionListener? = null
-    private lateinit var viewModel: JoinDebateViewModel
+    private lateinit var viewModelJoinDebate: JoinDebateViewModel
     private lateinit var viewModelDebate: DebateViewModel
-    val payloadCallback = PayloadByteCallback()
+    val payloadCallback = PayloadByteCallback(viewModelDebate, viewModelJoinDebate, requireContext())
     val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
             Nearby.getConnectionsClient(requireContext()).acceptConnection(endpointId, payloadCallback)
             // Automatically accept the connection on both sides.
+            viewModelJoinDebate.listEndpointId.plus(endpointId)
         }
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
             when (result.status.statusCode) {
@@ -63,6 +64,7 @@ class ItemBtListFragment : Fragment(), View.OnClickListener{
             Log.i("ItemBtListFragment", "Disconnected from $endpointId.")
             // We've been disconnected from this endpoint. No more data can be
             // sent or received.
+            viewModelJoinDebate.listEndpointId.remove(endpointId)
         }
     }
 
@@ -78,7 +80,7 @@ class ItemBtListFragment : Fragment(), View.OnClickListener{
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = activity?.run {
+        viewModelJoinDebate = activity?.run {
             ViewModelProviders.of(this).get(JoinDebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         // Add nb_attendees and name_bt_network to the fragment
@@ -92,13 +94,13 @@ class ItemBtListFragment : Fragment(), View.OnClickListener{
         return binding.root
     }
     fun connectNetwork(){
-        Log.i("ItemBtListFragment", viewModel.listNet[name_bt_network].toString())
+        Log.i("ItemBtListFragment", viewModelJoinDebate.listNet[name_bt_network].toString())
         //For each endpoint of the network, we request a connection to it.
-        var lstEP = (viewModel.listNet[name_bt_network] ?: mutableListOf()).toMutableList()
+        var lstEP = (viewModelJoinDebate.listNet[name_bt_network] ?: mutableListOf()).toMutableList()
         for (i in 0..lstEP.size) {
             val ep = lstEP[0]
             val cog = Nearby.getConnectionsClient(requireContext())
-            val co = cog.requestConnection(viewModel.userName, ep, connectionLifecycleCallback)
+            val co = cog.requestConnection(viewModelJoinDebate.userName, ep, connectionLifecycleCallback)
             co.addOnSuccessListener{
                 if(lstEP.remove(ep)){
                     Toast.makeText(requireContext(), "Connexion à $ep établie", Toast.LENGTH_SHORT).show()
@@ -125,9 +127,9 @@ class ItemBtListFragment : Fragment(), View.OnClickListener{
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         //Query debate from other's debateViewModel.
-        val net = viewModel.listNet[name_bt_network] ?: listOf()
+        val net = viewModelJoinDebate.listNet[name_bt_network] ?: listOf()
         loop@ for(n in net){
-            val payload = Payload.fromBytes("Require debate".toByteArray())
+            val payload = Payload.fromBytes(n.toByteArray())
             Nearby.getConnectionsClient(requireContext()).sendPayload(n, payload)
             Thread.sleep(1_000)
             if(viewModelDebate.is_updated == true) break@loop

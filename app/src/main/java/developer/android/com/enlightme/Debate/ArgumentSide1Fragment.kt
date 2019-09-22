@@ -63,12 +63,14 @@ class ArgumentSide1Fragment : Fragment() {
             // Long click listener function to edit the argument
             viewModel.temp_side = 1
             viewModel.edit_arg_pos = this.place
-            this.title = viewModel.debate.value?.debateEntity?.side_1_entity?.get(this.place)?.title
-            this.description = viewModel.debate.value?.debateEntity?.side_1_entity?.get(this.place)?.description
+            this.title = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.get(this.place)?.title
+            this.description = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.get(this.place)?.description
             // TODO send the position and side of ArgumentSide1 object to the constructor of NewArgDialogFragment
             val newArgDialogueFragment = NewArgDialogFragment.newInstance(
                 this.title ?: "",
-                this.description ?: ""
+                this.description ?: "",
+                1,
+                this.place
             )
             val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
             newArgDialogueFragment.show(fm, "editArgument")

@@ -16,15 +16,16 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
-import developer.android.com.enlightme.databinding.FragmentDebateBinding
 import developer.android.com.enlightme.databinding.FragmentNewArgDialogBinding
+import developer.android.com.enlightme.objects.DebateEntity
+import developer.android.com.enlightme.objects.HistElt
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_TITLE = "title"
 private const val ARG_DESCRIPTION = "description"
+private const val ARG_SIDE = "side"
+private const val ARG_PLACE = "place"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -37,9 +38,12 @@ private const val ARG_DESCRIPTION = "description"
 class NewArgDialogFragment : DialogFragment() {
     private var title: String? = null
     private var description: String? = null
+    private var side:Int = -1
+    private var place:Int = -1
     private lateinit var binding: FragmentNewArgDialogBinding
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
+    private lateinit var viewModelJoin: JoinDebateViewModel
     // Use this instance of the interface to deliver action events
     internal lateinit var dialogListener: NoticeDialogListener
 
@@ -48,6 +52,8 @@ class NewArgDialogFragment : DialogFragment() {
         arguments?.let {
             title = it.getString(ARG_TITLE)
             description = it.getString(ARG_DESCRIPTION)
+            side = it.getInt(ARG_SIDE)
+            place = it.getInt(ARG_PLACE)
         }
     }
 
@@ -56,21 +62,51 @@ class NewArgDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_arg_dialog, container, false)
-        //TODO create some change listener to send the modification the network and remove the manual updating of the viewModel.
         binding.newArgDialogTitle.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                //TODO Fire call to change and update in viewModel. Should be done with the right side and position in
+                // Fire call to change and update in viewModel. Done with the right side and place in
                 // this and current_level in debate
-                
+                var debate_entity: DebateEntity?
+                if(side==1){
+                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.get(place)
+
+                }else{
+                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.get(place)
+                }
+                debate_entity ?: run{
+                    Log.i("NewArgDialogFragment", "Debate entity not found.")
+                    throw java.lang.Exception("Debate entity not found.")
+                }
+                debate_entity!!.modify_title(s, start, before, count)
+                debate_entity!!.send_update(requireContext(), viewModelJoin.listEndpointId)
             }
             })
         binding.newArgDialogDescription.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                //Fire call to change and update in viewModel
+                // Fire call to change and update in viewModel. Done with the right side and place in
+                // this and current_level in debate
+                var debate_entity: DebateEntity?
+                if(side==1){
+                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.get(place)
+
+                }else{
+                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.get(place)
+                }
+                debate_entity ?: run{
+                    Log.i("NewArgDialogFragment", "Debate entity not found.")
+                    throw java.lang.Exception("Debate entity not found.")
+                }
+                // TODO a HistElt with the modifications should be sent. Then the modification to the view model could
+                //  be done by itself when we receive the information we have send to us. Or if we cannot send it
+                //  ourselves we should apply the changes afterward
+                // val hist_elt = HistElt()
+                // debate_entity!!.hist_debate.histEltList.plus()
+                debate_entity!!.modify_description(s, start, before, count)
+                debate_entity!!.send_update(requireContext(), viewModelJoin.listEndpointId)
 
             }
         })
@@ -132,6 +168,9 @@ class NewArgDialogFragment : DialogFragment() {
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
+        viewModelJoin = activity?.run {
+            ViewModelProviders.of(this).get(JoinDebateViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
         //val container = activity?.findViewById<ViewGroup>(R.id.fragment_new_arg_dialogue_core)
         return activity?.let {
             val builder = AlertDialog.Builder(it)
@@ -179,12 +218,14 @@ class NewArgDialogFragment : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(title: String, description: String) =
+        fun newInstance(title: String, description: String, side: Int = -1, place: Int = -1) =
             NewArgDialogFragment().apply {
                 arguments = Bundle().apply {
-                    // TODO add the argument position and side to find it back in view model
+                    // TODO add the argument place and side to find it back in view model
                     putString(ARG_TITLE, title)
                     putString(ARG_DESCRIPTION, description)
+                    putInt(ARG_SIDE, side)
+                    putInt(ARG_PLACE, place)
                 }
             }
     }

@@ -90,7 +90,8 @@ class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View) {
         // TODO create the argument in view modele here (see MainActivity onDialogPositiveClick function)
         viewModel.temp_side = 2
-        // TODO send the position and side of freshlly created ArgumentSide1 or ArgumentSide2 object to the constructor of NewArgDialogFragment
+        // No position or side send to newArgDialogueFragment here since we deal with a new argument (debate_entity will
+        // be created when the dialogue box disappear)
         val newArgDialogueFragment = NewArgDialogFragment()
         val fm = activity?.supportFragmentManager ?: throw RuntimeException(context.toString() + " cannot be null")
         newArgDialogueFragment.show(fm, "newArgument")

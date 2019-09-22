@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class HistDebate {
-    var hist_debate = mutableListOf<HistElt>()
+    var histEltList = mutableListOf<HistElt>()
 
 
 }

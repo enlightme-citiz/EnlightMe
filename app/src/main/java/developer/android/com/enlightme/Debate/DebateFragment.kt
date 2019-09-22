@@ -225,13 +225,15 @@ class DebateFragment : Fragment() {
     fun modArgument(side: Int, debateEntity: DebateEntity, edit_arg_pos: Int){
         when(side) {
             1 -> {
-                viewModel.debate.value?.debateEntity?.side_1_entity?.set(edit_arg_pos, debateEntity)
+                //viewModel.debate.value?.debateEntity?.side_1_entity?.set(edit_arg_pos, debateEntity)
+                //already done in the TextWatcher in NewArgDialogFragment
                 val argView = binding.side1ArgContainer.getChildAt(edit_arg_pos+1)
                 argView.findViewById<TextView>(R.id.argument_side1_text).text = debateEntity.title
                 argView.findViewById<TextView>(R.id.argument_side1_description).text = debateEntity.description
             }
             2 -> {
-                viewModel.debate.value?.debateEntity?.side_2_entity?.set(edit_arg_pos, debateEntity)
+                //viewModel.debate.value?.debateEntity?.side_2_entity?.set(edit_arg_pos, debateEntity)
+                //already done in the TextWatcher in NewArgDialogFragment
                 val argView = binding.side2ArgContainer.getChildAt(edit_arg_pos+1)
                 argView.findViewById<TextView>(R.id.argument_side2_text).text = debateEntity.title
                 argView.findViewById<TextView>(R.id.argument_side2_description).text = debateEntity.description
