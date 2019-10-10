@@ -17,9 +17,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
+import developer.android.com.enlightme.Debate.ConcurentOp.DeleteStr
+import developer.android.com.enlightme.Debate.ConcurentOp.InsertStr
+import developer.android.com.enlightme.Debate.ConcurentOp.Operation
 import developer.android.com.enlightme.databinding.FragmentNewArgDialogBinding
 import developer.android.com.enlightme.objects.DebateEntity
-import developer.android.com.enlightme.objects.HistElt
+import developer.android.com.enlightme.objects.DebateEntity.Companion.modify_description
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_TITLE = "title"
@@ -79,10 +82,15 @@ class NewArgDialogFragment : DialogFragment() {
                     Log.i("NewArgDialogFragment", "Debate entity not found.")
                     throw java.lang.Exception("Debate entity not found.")
                 }
-                debate_entity!!.modify_title(s, start, before, count)
-                debate_entity!!.send_update(requireContext(), viewModelJoin.listEndpointId)
+                val target = "title"
+                val listOperation = listOf(DeleteStr(debate_entity!!, start, before, target),
+                                                      InsertStr(debate_entity!!, start, s.substring(start,start+count),
+                                                          target)
+                )
+                debate_entity!!.update_and_mod(listOperation, requireContext(),
+                    viewModelJoin.listEndpointId, viewModelJoin.myEndpointId)
             }
-            })
+        })
         binding.newArgDialogDescription.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -100,14 +108,13 @@ class NewArgDialogFragment : DialogFragment() {
                     Log.i("NewArgDialogFragment", "Debate entity not found.")
                     throw java.lang.Exception("Debate entity not found.")
                 }
-                // TODO a HistElt with the modifications should be sent. Then the modification to the view model could
-                //  be done by itself when we receive the information we have send to us. Or if we cannot send it
-                //  ourselves we should apply the changes afterward
-                // val hist_elt = HistElt()
-                // debate_entity!!.hist_debate.histEltList.plus()
-                debate_entity!!.modify_description(s, start, before, count)
-                debate_entity!!.send_update(requireContext(), viewModelJoin.listEndpointId)
-
+                val target = "description"
+                val listOperation = listOf(DeleteStr(debate_entity!!, start, before, target),
+                    InsertStr(debate_entity!!, start, s.substring(start,start+count),
+                        target)
+                )
+                debate_entity!!.update_and_mod(listOperation, requireContext(),
+                    viewModelJoin.listEndpointId, viewModelJoin.myEndpointId)
             }
         })
         return binding.root
@@ -186,7 +193,6 @@ class NewArgDialogFragment : DialogFragment() {
                     R.string.new_arg_dialogue_ok
                 ) { dialog, id ->
                     // copy argument title and description in the temp_debate_entity of DebateViewModel
-                    // TODO trace the right dabate_entity using the current_level of debate and the place and side passed as class parameter
                     viewModel.temp_debate_entity.title =
                         dialogView.findViewById<EditText>(R.id.new_arg_dialog_title).text.toString()
                     viewModel.temp_debate_entity.description =
@@ -221,7 +227,6 @@ class NewArgDialogFragment : DialogFragment() {
         fun newInstance(title: String, description: String, side: Int = -1, place: Int = -1) =
             NewArgDialogFragment().apply {
                 arguments = Bundle().apply {
-                    // TODO add the argument place and side to find it back in view model
                     putString(ARG_TITLE, title)
                     putString(ARG_DESCRIPTION, description)
                     putInt(ARG_SIDE, side)

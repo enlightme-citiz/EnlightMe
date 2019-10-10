@@ -52,19 +52,17 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
     override fun onDialogPositiveClick(dialog: DialogFragment) {
         if(viewModel.edit_arg_pos >= 0){
-            //TODO used the current_level of Debate class to address the correct debate entity
             debateFragment.modArgument(viewModel.temp_side,
                 viewModel.temp_debate_entity, viewModel.edit_arg_pos)
         }else{
-            //TODO Replace this creation part into ArgumentPlusSide1|2 Fragment onClick function
-            //TODO used the current_level of Debate class to address the correct debate entity
             val place : Int
             if(viewModel.temp_side == 1){
-                place = viewModel.debate.value?.debateEntity?.side_1_entity?.size ?: -1
+                place = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.size ?: -1
             }else{
-                place = viewModel.debate.value?.debateEntity?.side_2_entity?.size ?: -1
+                place = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.size ?: -1
             }
-            viewModel.debate?.value?.debateEntity?.addArgument(viewModel.temp_side, viewModel.temp_debate_entity)
+            viewModel.debate?.value?.get_debate_entity()?.addArgument(listOf(viewModel.temp_side,
+                viewModel.temp_debate_entity))
             debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity, place)
         }
         viewModel.temp_side = 0

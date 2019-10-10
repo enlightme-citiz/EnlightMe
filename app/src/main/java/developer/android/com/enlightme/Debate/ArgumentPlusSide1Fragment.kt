@@ -22,7 +22,6 @@ class ArgumentPlusSide1Fragment : Fragment(), View.OnClickListener{
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
     private lateinit var binding: FragmentArgumentPlusSide1Binding
-    // TODO add the debateEntity object as a parameter to constructor. Stringify it if necessary
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +73,6 @@ class ArgumentPlusSide1Fragment : Fragment(), View.OnClickListener{
             }
     }
     override fun onClick(v: View) {
-        // TODO create the argument in view modele here (see MainActivity onDialogPositiveClick function)
         viewModel.temp_side = 1
         // No position or side send to newArgDialogueFragment here since we deal with a new argument (debate_entity will
         // be created when the dialogue box disappear)

@@ -47,9 +47,7 @@ class PayloadByteCallback() : PayloadCallback() {
         }
         //Try to get updates (Histlist)
         val updatePayload = json.parse(UpdatePayload.serializer(),String(receivedBytes, Charsets.UTF_8))
-        //TODO here we don't know yet which debate entity should be changed. So create a method in debate that cares to
-        // find that and apply changes to the proper debate.
-        debateViewModel.debate.applyUpdateItem(updatePayload)
+        debateViewModel.debate.value?.get_debate_entity()?.applyUpdateItem(updatePayload, joinDebateViewModel.myEndpointId)
     }
 
     override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
