@@ -13,9 +13,6 @@ class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: Strin
         this.start = start
         this.len = len
         this.target = target
-        if (len>1){
-            throw Exception("String modification are not supported yet.") //TODO deal with string instead of simple char if necessary
-        }
     }
     override fun perform(){
         when (target) {
@@ -35,12 +32,12 @@ class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: Strin
     override fun forward(operation: Operation){
         if (operation is InsertStr){
             if (operation.start >= this.start){
-                this.start = start + 1
+                this.start = start + operation.strIns.length
             }
         }
         if (operation is DeleteStr){
             if (operation.start > this.start){
-                this.start = start - 1
+                this.start = start - operation.len
             }
             if(operation.start == this.start){
                 this.start = 0
@@ -54,11 +51,11 @@ class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: Strin
     override fun backward(operation: Operation): Operation{
         if(operation is InsertStr){
             if(operation.start < this.start){
-                this.start = this.start - 1
+                this.start = this.start - operation.strIns.length
                 return operation
             }
             if(operation.start > this.start){
-                operation.start = operation.start - 1
+                operation.start = operation.start - this.len
                 return operation
             }
             if(operation.start == this.start){
@@ -70,11 +67,11 @@ class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: Strin
         }
         if(operation is DeleteStr){
             if(operation.start < this.start){
-                this.start = this.start + 1
+                this.start = this.start + operation.len
                 return operation
             }
             if(operation.start > this.start){
-                operation.start = operation.start - 1
+                operation.start = operation.start - this.len
                 return operation
             }
             if(operation.start == this.start){

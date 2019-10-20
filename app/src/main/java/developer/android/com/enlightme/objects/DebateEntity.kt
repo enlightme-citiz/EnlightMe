@@ -59,15 +59,51 @@ class DebateEntity {
             update_payload).toByteArray(Charsets.UTF_8))
         Nearby.getConnectionsClient(context).sendPayload(listEndpointId, pld)
     }
-
+    // Backward transpose
+    fun backwardTranspose(j){
+        hist_debate.histEltList[j-1].operation = hist_debate.histEltList[j].operation.backward(hist_debate.histEltList[j-1].operation)
+        if (hist_debate.histEltList[j-1].id_author == hist_debate.histEltList[j].id_author){
+            val idA = hist_debate.histEltList[j-1].id_author
+            hist_debate.histEltList[j-1].state_vector[idA] = hist_debate.histEltList[j-1].state_vector[idA] ?: 0 + 1
+            hist_debate.histEltList[j].state_vector[idA] = hist_debate.histEltList[j].state_vector[idA] ?: 1 - 1
+        }
+        val opTp = hist_debate.histEltList[j-1]
+        hist_debate.histEltList[j-1] = hist_debate.histEltList[j]
+        hist_debate.histEltList[j] = opTp
+    }
+    // Separate history
+    fun separateHist(histEltOp: HistElt, stateVectorOp: MutableMap<String, Int>): Int{
+        var n1 = 0
+        //TODO check for loop boundaries
+        for (i in 0..hist_debate.histEltList.size){
+            val opH = hist_debate.histEltList[i].operation
+            val svH = hist_debate.histEltList[i].state_vector
+            if (svH[histEltOp.id_author] ?: -1 < stateVectorOp[histEltOp.id_author] ?: 0){ // case lhs yields ?: -1
+                // when no operation from this user has been recorded yet. So  opH preceeed histEltOp. We ensure that
+                // by assigning -1
+                // case rhs yields ?: 1 when histEltOp.id_author sends its first modification. Thus no preceding
+                // operation exist. Thus we assign 0
+                // opH precedes histEltOp.
+                if (i>n1){
+                    for (j in i..n1){
+                        backwardTranspose(j)
+                    }
+                }
+                n1 += 1
+            }
+        }
+        return n1
+    }
     fun integrate(histEltOp: HistElt, stateVectorOp: MutableMap<String, Int>){
-        //TODO implement seperateHist and backwardtranpose and inegrate
+        //TODO check for loop boundaries
+        val n1 = separateHist(histEltOp, stateVectorOp)
+        for (i in n1+1..this.hist_debate.histEltList.size-1){
+            histEltOp.operation.forward(this.hist_debate.histEltList[i].operation)
+        }
+        histEltOp.operation.perform()
+        this.hist_debate.histEltList.add(histEltOp)
     }
-        // Separate history
-        separateHist(histEltOp, stateVectorOp)
-        // Backward transpose
-        backwardTranspose(histEltOp, stateVectorOp)
-    }
+
     fun manageOthersUpdate(updatePayload: UpdatePayload,
                            id_author: String){
         // Check if no preceding operation are missing

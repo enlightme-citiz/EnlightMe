@@ -32,12 +32,12 @@ class InsertStr (debateEntity: DebateEntity, start: Int, strIns: String, target:
     override fun forward(operation: Operation){
         if (operation is InsertStr){
             if (operation.start >= this.start){
-                this.start = start - 1
+                this.start = start - operation.strIns.length
             }
         }
         if (operation is DeleteStr){
             if (operation.start > this.start){
-                this.start = start + 1
+                this.start = start + operation.len
             }
             if(operation.start == this.start){
                 this.strIns = ""
@@ -50,11 +50,11 @@ class InsertStr (debateEntity: DebateEntity, start: Int, strIns: String, target:
     override fun backward(operation: Operation): Operation{
         if(operation is InsertStr){
             if(operation.start < this.start){
-                this.start = this.start - 1
+                this.start = this.start - operation.strIns.length
                 return operation
             }
             if(operation.start > this.start){
-                operation.start = operation.start + 1
+                operation.start = operation.start + strIns.length
                 return operation
             }
             if(operation.start == this.start){
@@ -64,11 +64,11 @@ class InsertStr (debateEntity: DebateEntity, start: Int, strIns: String, target:
         }
         if(operation is DeleteStr){
             if(operation.start < this.start){
-                this.start = this.start + 1
+                this.start = this.start + operation.len
                 return operation
             }
             if(operation.start > this.start){
-                operation.start = operation.start + 1
+                operation.start = operation.start + strIns.length
                 return operation
             }
             if(operation.start == this.start){
