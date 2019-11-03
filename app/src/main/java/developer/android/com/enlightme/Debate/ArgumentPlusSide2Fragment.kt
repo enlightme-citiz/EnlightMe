@@ -51,7 +51,7 @@ class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
         binding.argumentPlus2.setOnClickListener(this)
         binding.argumentPlus2.background = AppCompatResources.getDrawable(requireContext(),
             R.drawable.ripple_arg_plus_side_2)
-        binding.ic_add_black_24dp.background = AppCompatResources.getDrawable(requireContext(),
+        binding.icAddBlack24dp.background = AppCompatResources.getDrawable(requireContext(),
             R.drawable.ic_add_black_24dp)
         return binding.root
     }

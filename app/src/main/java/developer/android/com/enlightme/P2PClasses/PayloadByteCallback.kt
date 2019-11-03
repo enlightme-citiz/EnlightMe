@@ -35,6 +35,7 @@ class PayloadByteCallback() : PayloadCallback() {
             // We send him his endpoint and the debate then
             joinDebateViewModel.updateMyEndpointId(String(receivedBytes, Charsets.UTF_8),
                 debateViewModel.debate.value ?: Debate())
+            //TODO create send_whole_debate
             debateViewModel.debate.value?.debateEntity?.send_whole_debate(context,endpointId)
             return
         }
@@ -47,6 +48,7 @@ class PayloadByteCallback() : PayloadCallback() {
         }
         //Try to get updates (Histlist)
         val updatePayload = json.parse(UpdatePayload.serializer(),String(receivedBytes, Charsets.UTF_8))
+        //TODO update applyUpdateItem to the new method
         debateViewModel.debate.value?.get_debate_entity()?.applyUpdateItem(updatePayload, joinDebateViewModel.myEndpointId)
     }
 

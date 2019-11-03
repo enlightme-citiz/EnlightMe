@@ -3,7 +3,6 @@ package developer.android.com.enlightme
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
@@ -29,7 +28,8 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
     ProvideUserNameFragment.NoticeDialogListener{
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: DebateViewModel
+    private lateinit var debateViewModel: DebateViewModel
+    private lateinit var joinDebateViewModel: JoinDebateViewModel
     lateinit var debateFragment: DebateFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +37,11 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val navController = this.findNavController(R.id.myNavHostFragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
-        viewModel = this.run {
+        debateViewModel = this.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
+        }
+        joinDebateViewModel = this.run {
+            ViewModelProviders.of(this).get(JoinDebateViewModel::class.java)
         }
     }
     override fun onSupportNavigateUp(): Boolean {
@@ -51,22 +54,23 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
     // Fragment.onAttach() callback, which it uses to call the following methods
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
     override fun onDialogPositiveClick(dialog: DialogFragment) {
-        if(viewModel.edit_arg_pos >= 0){
-            debateFragment.modArgument(viewModel.temp_side,
-                viewModel.temp_debate_entity, viewModel.edit_arg_pos)
+        if(debateViewModel.edit_arg_pos >= 0){
+            debateFragment.modArgument(debateViewModel.temp_side,
+                debateViewModel.temp_debate_entity, debateViewModel.edit_arg_pos)
         }else{
             val place : Int
-            if(viewModel.temp_side == 1){
-                place = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.size ?: -1
+            if(debateViewModel.temp_side == 1){
+                place = debateViewModel.debate.value?.get_debate_entity()?.side_1_entity?.size ?: -1
             }else{
-                place = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.size ?: -1
+                place = debateViewModel.debate.value?.get_debate_entity()?.side_2_entity?.size ?: -1
             }
-            viewModel.debate?.value?.get_debate_entity()?.addArgument(listOf(viewModel.temp_side,
-                viewModel.temp_debate_entity))
-            debateFragment.addArgument(viewModel.temp_side, viewModel.temp_debate_entity, place)
+            //TODO implement AddArgument as an child class of Operation
+            val operation = AddArgument(debateViewModel.temp_side, place, debateViewModel.temp_debate_entity)
+            debateViewModel.debate?.value?.get_debate_entity()?.manageUserUpdate(listOf(operation), this,
+                joinDebateViewModel.listEndpointId, joinDebateViewModel.myEndpointId)
         }
-        viewModel.temp_side = 0
-        viewModel.temp_debate_entity = DebateEntity()
+        debateViewModel.temp_side = 0
+        debateViewModel.temp_debate_entity = DebateEntity()
     }
     override fun onDialogNegativeClick(dialog: DialogFragment) {
         // User touched the dialog's negative button

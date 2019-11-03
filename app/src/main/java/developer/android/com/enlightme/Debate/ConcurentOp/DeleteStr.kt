@@ -45,8 +45,6 @@ class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: Strin
                 // Equivalent to identity operation
             }
         }
-        //TODO deal with other changes type (add argument, delete argument, ...)
-        //TODO deal with changes that are not limited to one caracter but a complete string
     }
     override fun backward(operation: Operation): Operation{
         if(operation is InsertStr){
@@ -66,7 +64,7 @@ class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: Strin
             }
         }
         if(operation is DeleteStr){
-            if(operation.start < this.start){
+            if(operation.start <= this.start){
                 this.start = this.start + operation.len
                 return operation
             }
@@ -74,14 +72,10 @@ class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: Strin
                 operation.start = operation.start - this.len
                 return operation
             }
-            if(operation.start == this.start){
-                this.start = 0
-                this.len = 0
-                return operation
-            }
         }
-        //TODO deal with other changes type (add argument, delete argument, ...)
-        //TODO deal with changes that are not limited to one caracter but a complete string
-        throw Exception("Operation should be DeleteStr or InserteStr")
+        return operation
+    }
+    fun compare(op: DeleteStr): Boolean{
+        return ((this.start == op.start) && (this.len == op.len))
     }
 }

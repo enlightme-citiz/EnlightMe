@@ -19,10 +19,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import developer.android.com.enlightme.Debate.ConcurentOp.DeleteStr
 import developer.android.com.enlightme.Debate.ConcurentOp.InsertStr
-import developer.android.com.enlightme.Debate.ConcurentOp.Operation
 import developer.android.com.enlightme.databinding.FragmentNewArgDialogBinding
 import developer.android.com.enlightme.objects.DebateEntity
-import developer.android.com.enlightme.objects.DebateEntity.Companion.modify_description
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_TITLE = "title"
@@ -87,8 +85,8 @@ class NewArgDialogFragment : DialogFragment() {
                                                       InsertStr(debate_entity!!, start, s.substring(start,start+count),
                                                           target)
                 )
-                debate_entity!!.update_and_mod(listOperation, requireContext(),
-                    viewModelJoin.listEndpointId, viewModelJoin.myEndpointId)
+                debate_entity!!.manageUserUpdate(listOperation, requireContext(), viewModelJoin.listEndpointId,
+                    viewModelJoin.myEndpointId)
             }
         })
         binding.newArgDialogDescription.addTextChangedListener(object: TextWatcher {
@@ -113,7 +111,7 @@ class NewArgDialogFragment : DialogFragment() {
                     InsertStr(debate_entity!!, start, s.substring(start,start+count),
                         target)
                 )
-                debate_entity!!.update_and_mod(listOperation, requireContext(),
+                debate_entity!!.manageUserUpdate(listOperation, requireContext(),
                     viewModelJoin.listEndpointId, viewModelJoin.myEndpointId)
             }
         })

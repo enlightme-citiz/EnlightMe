@@ -127,7 +127,7 @@ class ItemBtListFragment : Fragment(), View.OnClickListener{
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         //Query debate from other's debateViewModel.
-        val net = viewModelJoinDebate.listNet[name_bt_network] ?: listOf()
+        val net = viewModelJoinDebate.listNet[name_bt_network] ?: mutableListOf<String>()
         loop@ for(n in net){
             val payload = Payload.fromBytes(n.toByteArray())
             Nearby.getConnectionsClient(requireContext()).sendPayload(n, payload)
