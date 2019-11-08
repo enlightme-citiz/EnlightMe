@@ -4,22 +4,28 @@ import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
-class InsertArg(debateEntity: DebateEntity, subDebateEntity: DebateEntity, place: Int, side: Int): Operation(debateEntity){
-    val subDebateEntity: DebateEntity
-    var place: Int
-    var side: Int
-    var del_befor: List<DeleteArg>
-    var del_after: List<DeleteArg>
-    init{
+class InsertArg : Operation {
+    constructor(
+        debateEntity: DebateEntity,
+        subDebateEntity: DebateEntity,
+        place: Int,
+        side: Int
+    ) : super(debateEntity) {
         this.subDebateEntity = subDebateEntity
         this.place = place
         this.side = side
         this.del_befor = listOf()
         this.del_after = listOf()
-        if((side != 1) && (side != 2)){
+        if ((side != 1) && (side != 2)) {
             throw Exception("Side should be 1 or 2")
         }
     }
+
+    val subDebateEntity: DebateEntity
+    var place: Int
+    var side: Int
+    var del_befor: List<DeleteArg>
+    var del_after: List<DeleteArg>
     override fun perform(){
         if (this.place>=0){
             if(this.side==1){

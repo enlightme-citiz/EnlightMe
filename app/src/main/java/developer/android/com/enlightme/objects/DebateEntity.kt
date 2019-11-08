@@ -76,7 +76,6 @@ class DebateEntity {
         var n1 = 0
         //TODO check for loop boundaries
         for (i in 0..hist_debate.histEltList.size){
-            val opH = hist_debate.histEltList[i].operation
             val svH = hist_debate.histEltList[i].state_vector
             if (svH[histEltOp.id_author] ?: -1 < stateVectorOp[histEltOp.id_author] ?: 0){ // case lhs yields ?: -1
                 // when no operation from this user has been recorded yet. So  opH preceeed histEltOp. We ensure that

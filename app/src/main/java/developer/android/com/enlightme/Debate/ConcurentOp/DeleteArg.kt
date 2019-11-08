@@ -1,17 +1,20 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
 import developer.android.com.enlightme.objects.DebateEntity
+import kotlinx.serialization.Serializable
 
-class DeleteArg(debateEntity: DebateEntity, place: Int, side: Int): Operation(debateEntity) {
-    var place: Int
-    var side: Int
-    init{
+@Serializable
+class DeleteArg : Operation {
+    constructor(debateEntity: DebateEntity, place: Int, side: Int) : super(debateEntity) {
         this.place = place
         this.side = side
-        if((side != 1) && (side != 2)){
+        if ((side != 1) && (side != 2)) {
             throw Exception("Side should be 1 or 2")
         }
     }
+
+    var place: Int
+    var side: Int
     override fun perform(){
         if (this.place>=0){
             if(this.side==1){

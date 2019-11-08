@@ -4,16 +4,17 @@ import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
-class DeleteStr (debateEntity: DebateEntity, start: Int, len: Int, target: String): Operation(debateEntity){
-    // Delete a character or some character in the string
-    var start: Int // starting position of the string to be deleted if start == -1, the operation is equivalent to the identity
-    var len: Int   // length of the string to be deleted
-    val target: String // title or description. This targets the string to be changed
-    init{
+class DeleteStr : Operation {
+    constructor(debateEntity: DebateEntity, start: Int, len: Int, target: String) : super(debateEntity) {
         this.start = start
         this.len = len
         this.target = target
     }
+
+    // Delete a character or some character in the string
+    var start: Int // starting position of the string to be deleted if start == -1, the operation is equivalent to the identity
+    var len: Int   // length of the string to be deleted
+    val target: String // title or description. This targets the string to be changed
     override fun perform(){
         when (target) {
             "title" -> {

@@ -4,12 +4,13 @@ import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
-abstract class Operation (debateEntity: DebateEntity){
+abstract class Operation {
 
-    val debateEntity: DebateEntity
-    init{
+    constructor(debateEntity: DebateEntity) {
         this.debateEntity = debateEntity
     }
+
+    val debateEntity: DebateEntity
 
     abstract fun perform()
     abstract fun forward(operation: Operation)

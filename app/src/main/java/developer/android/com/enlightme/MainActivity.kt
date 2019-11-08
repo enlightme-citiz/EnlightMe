@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import developer.android.com.enlightme.Debate.*
+import developer.android.com.enlightme.Debate.ConcurentOp.InsertArg
 import developer.android.com.enlightme.databinding.ActivityMainBinding
 import developer.android.com.enlightme.objects.DebateEntity
 
@@ -64,10 +65,13 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
             }else{
                 place = debateViewModel.debate.value?.get_debate_entity()?.side_2_entity?.size ?: -1
             }
-            //TODO implement AddArgument as an child class of Operation
-            val operation = AddArgument(debateViewModel.temp_side, place, debateViewModel.temp_debate_entity)
-            debateViewModel.debate?.value?.get_debate_entity()?.manageUserUpdate(listOf(operation), this,
-                joinDebateViewModel.listEndpointId, joinDebateViewModel.myEndpointId)
+            val currDebate = debateViewModel.debate.value?.get_debate_entity()
+            if (currDebate != null){
+                val operation = InsertArg(currDebate, debateViewModel.temp_debate_entity, place, debateViewModel.temp_side)
+                currDebate.manageUserUpdate(listOf(operation), this,
+                    joinDebateViewModel.listEndpointId, joinDebateViewModel.myEndpointId)
+            }
+
         }
         debateViewModel.temp_side = 0
         debateViewModel.temp_debate_entity = DebateEntity()

@@ -4,20 +4,21 @@ import developer.android.com.enlightme.objects.DebateEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
-class InsertStr (debateEntity: DebateEntity, start: Int, strIns: String, target: String): Operation(debateEntity){
-    // Insert a character or some characters in the string
-    var start: Int // starting position of the string to be deleted
-    var strIns: String // String to be inserted
-    val target: String // title or description. This targets the string to be changed
-    var del_befor: List<DeleteStr>
-    var del_after: List<DeleteStr>
-    init{
+class InsertStr : Operation {
+    constructor(debateEntity: DebateEntity, start: Int, strIns: String, target: String) : super(debateEntity) {
         this.start = start
         this.strIns = strIns
         this.target = target
         this.del_befor = listOf()
         this.del_after = listOf()
     }
+
+    // Insert a character or some characters in the string
+    var start: Int // starting position of the string to be deleted
+    var strIns: String // String to be inserted
+    val target: String // title or description. This targets the string to be changed
+    var del_befor: List<DeleteStr>
+    var del_after: List<DeleteStr>
     override fun perform(){
         when (target) {
             "title" -> {
@@ -62,15 +63,13 @@ class InsertStr (debateEntity: DebateEntity, start: Int, strIns: String, target:
     }
     override fun forward(operation: Operation){
         if (operation is InsertStr){
-            if (operation.start > this.start){
+            if (operation.start < this.start){
                 this.start = start + operation.strIns.length
             }
             if (operation.start == this.start){
                 //Check if some deletion has been operated in // of these two.
                 // If so determine if the insertion have been perfomed at the
                 // same position or not.
-                //TODO code the intersect method that checks if txo histories have
-                // some operation in common
                 if (intersect(operation.del_after, this.del_befor)){
                     // Current strIns has been performed after operation. But position
                     // are equal because of deletion that has appended in between
