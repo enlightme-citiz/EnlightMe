@@ -81,12 +81,12 @@ class NewArgDialogFragment : DialogFragment() {
                     throw java.lang.Exception("Debate entity not found.")
                 }
                 val target = "title"
-                val listOperation = listOf(DeleteStr(debate_entity!!, start, before, target),
-                                                      InsertStr(debate_entity!!, start, s.substring(start,start+count),
+                val listOperation = listOf(DeleteStr(start, before, target),
+                                                      InsertStr(start, s.substring(start,start+count),
                                                           target)
                 )
-                debate_entity!!.manageUserUpdate(listOperation, requireContext(), viewModelJoin.listEndpointId,
-                    viewModelJoin.myEndpointId)
+                viewModel.debate.value!!.manageUserUpdate(listOperation, requireContext(), viewModelJoin.listEndpointId,
+                    viewModelJoin.myEndpointId, debate_entity.path_to_root)
             }
         })
         binding.newArgDialogDescription.addTextChangedListener(object: TextWatcher {
@@ -107,12 +107,12 @@ class NewArgDialogFragment : DialogFragment() {
                     throw java.lang.Exception("Debate entity not found.")
                 }
                 val target = "description"
-                val listOperation = listOf(DeleteStr(debate_entity!!, start, before, target),
-                    InsertStr(debate_entity!!, start, s.substring(start,start+count),
+                val listOperation = listOf(DeleteStr(start, before, target),
+                    InsertStr(start, s.substring(start,start+count),
                         target)
                 )
-                debate_entity!!.manageUserUpdate(listOperation, requireContext(),
-                    viewModelJoin.listEndpointId, viewModelJoin.myEndpointId)
+                viewModel.debate.value!!.manageUserUpdate(listOperation, requireContext(),
+                    viewModelJoin.listEndpointId, viewModelJoin.myEndpointId, debate_entity!!.path_to_root)
             }
         })
         return binding.root

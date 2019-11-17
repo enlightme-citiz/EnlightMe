@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class DeleteStr : Operation {
-    constructor(debateEntity: DebateEntity, start: Int, len: Int, target: String) : super(debateEntity) {
+    constructor(start: Int, len: Int, target: String) : super() {
         this.start = start
         this.len = len
         this.target = target
@@ -15,15 +15,23 @@ class DeleteStr : Operation {
     var start: Int // starting position of the string to be deleted if start == -1, the operation is equivalent to the identity
     var len: Int   // length of the string to be deleted
     val target: String // title or description. This targets the string to be changed
-    override fun perform(){
+    override fun perform(debateEntity: DebateEntity){
         when (target) {
             "title" -> {
-                debateEntity.title = debateEntity.title.substring(0,start) +
-                        debateEntity.title.substring(start+len)
+                if (start < debateEntity.title.length){
+                    debateEntity.title = debateEntity.title.substring(0,start) +
+                            debateEntity.title.substring(start+len)
+                }else{
+                    debateEntity.title = debateEntity.title
+                }
             }
             "description" -> {
-                debateEntity.description = debateEntity.description.substring(0,start) +
-                        debateEntity.description.substring(start+len)
+                if (start < debateEntity.description.length){
+                    debateEntity.description = debateEntity.description.substring(0,start) +
+                            debateEntity.description.substring(start+len)
+                }else{
+                    debateEntity.description = debateEntity.description.substring(0,start)
+                }
             }
             else -> {
                 throw Exception("Target cannot be confirmed")
@@ -32,18 +40,19 @@ class DeleteStr : Operation {
     }
     override fun forward(operation: Operation){
         if (operation is InsertStr){
-            if (operation.start >= this.start){
+            if (operation.start <= this.start){
                 this.start = start + operation.strIns.length
             }
         }
         if (operation is DeleteStr){
-            if (operation.start > this.start){
+            if (operation.start < this.start){
                 this.start = start - operation.len
-            }
-            if(operation.start == this.start){
-                this.start = 0
-                this.len = 0
-                // Equivalent to identity operation
+            }else{
+                if(operation.start == this.start){
+                    this.start = 0
+                    this.len = 0
+                    // Equivalent to identity operation
+                }
             }
         }
     }
@@ -79,4 +88,5 @@ class DeleteStr : Operation {
     fun compare(op: DeleteStr): Boolean{
         return ((this.start == op.start) && (this.len == op.len))
     }
+    //TODO vérifier la couverture du code pour les opération forward et backward
 }

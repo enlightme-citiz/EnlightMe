@@ -42,12 +42,12 @@ class PayloadByteCallback() : PayloadCallback() {
         val json = Json(JsonConfiguration.Stable)
         val debate = json.parse(Debate.serializer(), String(receivedBytes, Charsets.UTF_8))
         if (debateViewModel.is_updated == false){
-            debateViewModel.debate?.value?.listAttendees = debate.listAttendees
-            debateViewModel.debate?.value?.debateEntity = debate.debateEntity
+            debateViewModel.debate.value?.listAttendees = debate.listAttendees
+            debateViewModel.debate.value?.debateEntity = debate.debateEntity
         }
         //Try to get updates (of type updatePayload)
         val updatePayload = json.parse(UpdatePayload.serializer(),String(receivedBytes, Charsets.UTF_8))
-        debateViewModel.debate.value?.get_debate_entity()?.manageOthersUpdate(updatePayload, endpointId)
+        debateViewModel.debate.value?.manageOthersUpdate(updatePayload, endpointId)
     }
 
     override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {

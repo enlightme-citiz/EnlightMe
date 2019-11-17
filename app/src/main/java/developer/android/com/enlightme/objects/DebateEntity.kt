@@ -54,7 +54,7 @@ class DebateEntity {
     // Deal with a change coming from outside
     fun send_update(context: Context, listEndpointId:List<String>, histElt: HistElt){
         val json = Json(JsonConfiguration.Stable)
-        val update_payload = UpdatePayload(histElt, state_vector, path_to_root)
+        val update_payload = UpdatePayload(histElt, path_to_root)
         val pld = Payload.fromBytes(json.stringify(UpdatePayload.serializer(),
             update_payload).toByteArray(Charsets.UTF_8))
         Nearby.getConnectionsClient(context).sendPayload(listEndpointId, pld)
@@ -62,29 +62,37 @@ class DebateEntity {
     // Backward transpose
     fun backwardTranspose(j: Int){
         hist_debate.histEltList[j-1].operation = hist_debate.histEltList[j].operation.backward(hist_debate.histEltList[j-1].operation)
-        if (hist_debate.histEltList[j-1].id_author == hist_debate.histEltList[j].id_author){
-            val idA = hist_debate.histEltList[j-1].id_author
-            hist_debate.histEltList[j-1].state_vector[idA] = hist_debate.histEltList[j-1].state_vector[idA] ?: 0 + 1
-            hist_debate.histEltList[j].state_vector[idA] = hist_debate.histEltList[j].state_vector[idA] ?: 1 - 1
-        }
+        //if (hist_debate.histEltList[j-1].id_author == hist_debate.histEltList[j].id_author){
+        //    val idA = hist_debate.histEltList[j-1].id_author
+        //    hist_debate.histEltList[j-1].state_vector[idA] = hist_debate.histEltList[j-1].state_vector[idA] ?: 0 + 1
+        //    hist_debate.histEltList[j].state_vector[idA] = hist_debate.histEltList[j].state_vector[idA] ?: 1 - 1
+        //}
+        val svj = hist_debate.histEltList[j].state_vector
+        hist_debate.histEltList[j].state_vector = hist_debate.histEltList[j-1].state_vector
+        hist_debate.histEltList[j-1].state_vector = svj
+
+        val idaj = hist_debate.histEltList[j].id_author
+        hist_debate.histEltList[j].id_author = hist_debate.histEltList[j-1].id_author
+        hist_debate.histEltList[j-1].id_author = idaj
+
         val opTp = hist_debate.histEltList[j-1]
         hist_debate.histEltList[j-1] = hist_debate.histEltList[j]
         hist_debate.histEltList[j] = opTp
     }
     // Separate history
-    fun separateHist(histEltOp: HistElt, stateVectorOp: MutableMap<String, Int>): Int{
+    fun separateHist(histEltOp: HistElt): Int{
         var n1 = 0
         //TODO check for loop boundaries
-        for (i in 0..hist_debate.histEltList.size){
+        for (i in hist_debate.histEltList.indices){
             val svH = hist_debate.histEltList[i].state_vector
-            if (svH[histEltOp.id_author] ?: -1 < stateVectorOp[histEltOp.id_author] ?: 0){ // case lhs yields ?: -1
+            if (svH[histEltOp.id_author] ?: 0 < histEltOp.state_vector[histEltOp.id_author] ?: 0){ // case lhs yields ?: -1
                 // when no operation from this user has been recorded yet. So  opH preceeed histEltOp. We ensure that
                 // by assigning -1
                 // case rhs yields ?: 1 when histEltOp.id_author sends its first modification. Thus no preceding
                 // operation exist. Thus we assign 0
                 // opH precedes histEltOp.
                 if (i>n1){
-                    for (j in i..n1){
+                    for (j in i..n1+1){
                         backwardTranspose(j)
                     }
                 }
@@ -92,15 +100,6 @@ class DebateEntity {
             }
         }
         return n1
-    }
-    fun integrate(histEltOp: HistElt, stateVectorOp: MutableMap<String, Int>){
-        //TODO check for loop boundaries
-        val n1 = separateHist(histEltOp, stateVectorOp)
-        for (i in n1+1..this.hist_debate.histEltList.size-1){
-            histEltOp.operation.forward(this.hist_debate.histEltList[i].operation)
-        }
-        histEltOp.operation.perform()
-        this.hist_debate.histEltList.add(histEltOp)
     }
 
     fun updateShouldWait(stateVectorOp: MutableMap<String, Int>): Boolean{
@@ -110,50 +109,6 @@ class DebateEntity {
             }
         }
         return false
-    }
-    fun manageOthersUpdate(updatePayload: UpdatePayload,
-                           id_author: String){
-        // Check if no preceding operation are missing
-        val histEltOp: HistElt = updatePayload.hist_elt
-        val stateVectorOp: MutableMap<String, Int> = updatePayload.state_vector
-        var nbChangeToApply = updateWaitingList.size+1
-        if(updateShouldWait(stateVectorOp)){
-            updateWaitingList = updateWaitingList.plus(updatePayload)
-            nbChangeToApply -= 1 // To not try to apply this update that should still wait for a new update.
-        }
-        if (nbChangeToApply == updateWaitingList.size+1){
-            // No update are missing. updatePayload can be treated first in the list of updateWaitingList
-            updateWaitingList = listOf(updatePayload) + updateWaitingList
-        }
-        for (i in 0..nbChangeToApply){
-            if(updateShouldWait(stateVectorOp)){
-                // For each update in waiting list do
-                // Integrate in the history
-                integrate(histEltOp, stateVectorOp)
-                // Update state_vector
-                if (!(id_author in state_vector)){
-                    state_vector[id_author] = 1
-                }else{
-                    state_vector[id_author] = state_vector[id_author]!! + 1
-                }
-                // Apply changes
-                histEltOp.operation.perform()
-            }
-        }
-    }
-    fun manageUserUpdate(listOperation: List<Operation>,
-                         context: Context,
-                         listEndpointId: List<String>,
-                         id_author: String) {
-        //Create HistElt
-        for (lo in listOperation) {
-            val histElt = HistElt(id_author, lo, state_vector)
-            //Broadcast it
-            this.send_update(context, listEndpointId, histElt)
-            //manageOthersUpdate since the broadcast will not reach us (see Nearby doc)
-            val updatePayload = UpdatePayload(histElt, state_vector, path_to_root)
-            manageOthersUpdate(updatePayload, id_author)
-        }
     }
 
     fun send_whole_debate(context: Context, endpointId: String){

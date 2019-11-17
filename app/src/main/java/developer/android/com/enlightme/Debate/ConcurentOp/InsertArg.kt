@@ -6,11 +6,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 class InsertArg : Operation {
     constructor(
-        debateEntity: DebateEntity,
         subDebateEntity: DebateEntity,
         place: Int,
         side: Int
-    ) : super(debateEntity) {
+    ) : super() {
         this.subDebateEntity = subDebateEntity
         this.place = place
         this.side = side
@@ -26,7 +25,7 @@ class InsertArg : Operation {
     var side: Int
     var del_befor: List<DeleteArg>
     var del_after: List<DeleteArg>
-    override fun perform(){
+    override fun perform(debateEntity: DebateEntity){
         if (this.place>=0){
             if(this.side==1){
                 debateEntity.side_1_entity.add(place,this.subDebateEntity)

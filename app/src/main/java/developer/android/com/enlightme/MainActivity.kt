@@ -65,11 +65,11 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
             }else{
                 place = debateViewModel.debate.value?.get_debate_entity()?.side_2_entity?.size ?: -1
             }
-            val currDebate = debateViewModel.debate.value?.get_debate_entity()
+            val currDebate = this.debateViewModel.debate.value?.get_debate_entity()
             if (currDebate != null){
-                val operation = InsertArg(currDebate, debateViewModel.temp_debate_entity, place, debateViewModel.temp_side)
-                currDebate.manageUserUpdate(listOf(operation), this,
-                    joinDebateViewModel.listEndpointId, joinDebateViewModel.myEndpointId)
+                val operation = InsertArg(debateViewModel.temp_debate_entity, place, debateViewModel.temp_side)
+                debateViewModel.debate.value?.manageUserUpdate(listOf(operation), this,
+                    joinDebateViewModel.listEndpointId, joinDebateViewModel.myEndpointId, currDebate.path_to_root)
             }
 
         }

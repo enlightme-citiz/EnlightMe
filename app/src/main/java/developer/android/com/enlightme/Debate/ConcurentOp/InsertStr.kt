@@ -5,29 +5,38 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class InsertStr : Operation {
-    constructor(debateEntity: DebateEntity, start: Int, strIns: String, target: String) : super(debateEntity) {
+    constructor(start: Int, strIns: String, target: String) : super() {
         this.start = start
         this.strIns = strIns
         this.target = target
-        this.del_befor = listOf()
-        this.del_after = listOf()
+        this.del_befor = mutableListOf<DeleteStr>()
+        this.del_after = mutableListOf<DeleteStr>()
     }
 
     // Insert a character or some characters in the string
     var start: Int // starting position of the string to be deleted
     var strIns: String // String to be inserted
     val target: String // title or description. This targets the string to be changed
-    var del_befor: List<DeleteStr>
-    var del_after: List<DeleteStr>
-    override fun perform(){
+    var del_befor: MutableList<DeleteStr>
+    var del_after: MutableList<DeleteStr>
+    override fun perform(debateEntity: DebateEntity){
         when (target) {
             "title" -> {
-                debateEntity.title = debateEntity.title.substring(0,start) + this.strIns +
-                        debateEntity.title.substring(start)
+                if (start < debateEntity.title.length){
+                    debateEntity.title = debateEntity.title.substring(0,start) + this.strIns +
+                            debateEntity.title.substring(start)
+                }else{
+                    debateEntity.title = debateEntity.title + this.strIns
+                }
             }
             "description" -> {
-                debateEntity.description = debateEntity.description.substring(0,start) + this.strIns +
-                        debateEntity.description.substring(start)
+                if (start < debateEntity.description.length){
+                    debateEntity.description = debateEntity.description.substring(0,start) + this.strIns +
+                            debateEntity.description.substring(start)
+                }else{
+                    debateEntity.description = debateEntity.description + this.strIns
+                }
+
             }
             else -> {
                 throw Exception("Target cannot be confirmed")
@@ -65,6 +74,7 @@ class InsertStr : Operation {
         if (operation is InsertStr){
             if (operation.start < this.start){
                 this.start = start + operation.strIns.length
+                return
             }
             if (operation.start == this.start){
                 //Check if some deletion has been operated in // of these two.
@@ -74,26 +84,30 @@ class InsertStr : Operation {
                     // Current strIns has been performed after operation. But position
                     // are equal because of deletion that has appended in between
                     this.start = start + operation.strIns.length
+                    return
                 }else{
                     if(!intersect(operation.del_befor, this.del_after)){
                         // Those two insertions have realy been done at the same position.
                         // Dealing with priority rule to ensure that everyone has the same copy
                         if(operation.priorTo(this) == -1){
                             // Deleting history of delete operations
-                            this.del_after = listOf()
-                            this.del_befor = listOf()
+                            this.del_after = mutableListOf()
+                            this.del_befor = mutableListOf()
+                            return
                         }
                         if(operation.priorTo(this) == 1){
                             // Here the priority rule says that actual operation should be
                             // done after operation
-                            this.del_after = listOf()
-                            this.del_befor = listOf()
+                            this.del_after = mutableListOf()
+                            this.del_befor = mutableListOf()
                             this.start = start + operation.strIns.length
+                            return
                         }
                         if(operation.priorTo(this) == 0){
                             // Identical operation. We merge it by reducing current operation to
                             // identity
                             this.strIns = ""
+                            return
                         }
                     }
                 }
@@ -105,11 +119,12 @@ class InsertStr : Operation {
                 this.start = start - operation.len
                 //Keeping record of this deletion for future forward checks
                 // between two insertions
-                this.del_befor.plus(operation)
+                this.del_befor.add(operation)
             }else{
-                this.del_after.plus(operation)
+                this.del_after.add(operation)
             }
         }
+        return
     }
     override fun backward(operation: Operation): Operation{
         if(operation is InsertStr){
@@ -123,7 +138,7 @@ class InsertStr : Operation {
             }
         }
         if(operation is DeleteStr){
-            if(operation.start < this.start){
+            if(operation.start <= this.start){
                 this.start = this.start + operation.len
                 return operation
             }
@@ -131,13 +146,8 @@ class InsertStr : Operation {
                 operation.start = operation.start + strIns.length
                 return operation
             }
-            if(operation.start == this.start){
-                this.strIns = ""
-                operation.start = 0
-                operation.len = 0
-                return operation
-            }
         }
         return operation
     }
+    //TODO vérifier la couverture du code pour les opération forward et backward
 }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class DeleteArg : Operation {
-    constructor(debateEntity: DebateEntity, place: Int, side: Int) : super(debateEntity) {
+    constructor(place: Int, side: Int) : super() {
         this.place = place
         this.side = side
         if ((side != 1) && (side != 2)) {
@@ -15,7 +15,7 @@ class DeleteArg : Operation {
 
     var place: Int
     var side: Int
-    override fun perform(){
+    override fun perform(debateEntity: DebateEntity){
         if (this.place>=0){
             if(this.side==1){
                 debateEntity.side_1_entity.removeAt(place)
