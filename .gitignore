@@ -1,6 +1,6 @@
 *.iml
 *.properties
-
+*.apk
 # Compiled class file
 *.class
 

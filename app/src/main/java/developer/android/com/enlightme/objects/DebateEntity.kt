@@ -3,10 +3,11 @@ package developer.android.com.enlightme.objects
 import android.content.Context
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.Payload
-import developer.android.com.enlightme.Debate.ConcurentOp.Operation
+import developer.android.com.enlightme.Debate.ConcurentOp.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import java.util.*
 
@@ -53,7 +54,18 @@ class DebateEntity {
     // Deal with a change from the user
     // Deal with a change coming from outside
     fun send_update(context: Context, listEndpointId:List<String>, histElt: HistElt){
-        val json = Json(JsonConfiguration.Stable)
+        //Serializer registering of abstact class.
+        // See https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md for
+        // more informations
+        val messageModule = SerializersModule {
+            polymorphic(Operation::class) {
+                InsertArg::class with InsertArg.serializer()
+                DeleteArg::class with DeleteArg.serializer()
+                InsertStr::class with InsertStr.serializer()
+                DeleteStr::class with DeleteStr.serializer()
+            }
+        }
+        val json = Json(context = messageModule)
         val update_payload = UpdatePayload(histElt, path_to_root)
         val pld = Payload.fromBytes(json.stringify(UpdatePayload.serializer(),
             update_payload).toByteArray(Charsets.UTF_8))

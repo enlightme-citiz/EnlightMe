@@ -21,7 +21,7 @@ import androidx.navigation.findNavController
  *
  */
 class MainFragment : Fragment() {
-    private var listener: OnFragmentInteractionListener? = null
+    //private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,23 +39,23 @@ class MainFragment : Fragment() {
         }
         return binding.root
     }
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+    // fun onButtonPressed(uri: Uri) {
+    //     listener?.onFragmentInteraction(uri)
+    // }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
+    //override fun onAttach(context: Context) {
+    //    super.onAttach(context)
+    //    if (context is OnFragmentInteractionListener) {
+    //        listener = context
+    //    } else {
+    //        throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+    //    }
+    //}
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
+    //override fun onDetach() {
+    //    super.onDetach()
+    //    listener = null
+    //}
 
     /**
      * This interface must be implemented by activities that contain this
@@ -80,7 +80,7 @@ class MainFragment : Fragment() {
          * @return A new instance of fragment MainFragment.
          */
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             MainFragment().apply {
                 arguments = Bundle().apply {
                 }

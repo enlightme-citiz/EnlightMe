@@ -1,9 +1,12 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
 import developer.android.com.enlightme.objects.DebateEntity
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("delete_str")
 class DeleteStr : Operation {
     constructor(start: Int, len: Int, target: String) : super() {
         this.start = start

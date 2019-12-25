@@ -1,9 +1,11 @@
 package developer.android.com.enlightme.objects
 import kotlinx.serialization.Serializable
 import developer.android.com.enlightme.Debate.ConcurentOp.Operation
+import kotlinx.serialization.Polymorphic
+
 @Serializable
 class HistElt {
-    constructor(id_author: String, operation: Operation, state_vector: MutableMap<String, Int>) {
+    constructor(id_author: String, operation: @Polymorphic Operation, state_vector: MutableMap<String, Int>) {
         this.id_author = id_author
         this.operation = operation
         this.state_vector = state_vector

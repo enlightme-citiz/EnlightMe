@@ -14,13 +14,8 @@ import developer.android.com.enlightme.databinding.ActivityMainBinding
 import developer.android.com.enlightme.objects.DebateEntity
 
 class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionListener,
-    Create1Fragment.OnFragmentInteractionListener,
-    Create2Fragment.OnFragmentInteractionListener,
-    DebateFragment.OnFragmentInteractionListener,
     ArgumentPlusSide1Fragment.OnFragmentInteractionListener,
     ArgumentPlusSide2Fragment.OnFragmentInteractionListener,
-    ArgumentSide1Fragment.OnFragmentInteractionListener,
-    ArgumentSide2Fragment.OnFragmentInteractionListener,
     NewArgDialogFragment.OnFragmentInteractionListener,
     JoinDebateFragment.OnFragmentInteractionListener,
     ItemBtListFragment.OnFragmentInteractionListener,

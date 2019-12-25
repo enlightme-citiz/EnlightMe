@@ -33,7 +33,6 @@ import developer.android.com.enlightme.objects.DebateEntity
  */
 class DebateFragment : Fragment() {
     private lateinit var viewModel: DebateViewModel
-    private var listener: OnFragmentInteractionListener? = null
     private lateinit var binding: FragmentDebateBinding
     //Liste of side 1 argument (ArgumentSide1Fragment)
     private var side1ArgList = mutableListOf<ArgumentSide1Fragment>()
@@ -89,24 +88,6 @@ class DebateFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -118,9 +99,6 @@ class DebateFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
-    }
 
     companion object {
         fun newInstance() =

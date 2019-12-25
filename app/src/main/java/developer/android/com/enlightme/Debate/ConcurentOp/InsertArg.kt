@@ -1,9 +1,12 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
 import developer.android.com.enlightme.objects.DebateEntity
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("insert_arg")
 class InsertArg : Operation {
     constructor(
         subDebateEntity: DebateEntity,
