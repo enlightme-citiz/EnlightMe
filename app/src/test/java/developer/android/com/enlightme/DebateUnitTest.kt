@@ -2,10 +2,10 @@ package developer.android.com.enlightme
 
 import developer.android.com.enlightme.Debate.ConcurentOp.DeleteStr
 import developer.android.com.enlightme.Debate.ConcurentOp.InsertStr
-import developer.android.com.enlightme.objects.Debate
-import developer.android.com.enlightme.objects.DebateEntity
-import developer.android.com.enlightme.objects.HistElt
-import developer.android.com.enlightme.objects.UpdatePayload
+import developer.android.com.enlightme.Objects.Debate
+import developer.android.com.enlightme.Objects.DebateEntity
+import developer.android.com.enlightme.Objects.HistElt
+import developer.android.com.enlightme.Objects.UpdatePayload
 import org.junit.Test
 
 class DebateUnitTest {

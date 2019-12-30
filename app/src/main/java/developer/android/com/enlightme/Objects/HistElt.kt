@@ -1,4 +1,4 @@
-package developer.android.com.enlightme.objects
+package developer.android.com.enlightme.Objects
 import kotlinx.serialization.Serializable
 import developer.android.com.enlightme.Debate.ConcurentOp.Operation
 import kotlinx.serialization.Polymorphic

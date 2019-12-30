@@ -1,7 +1,7 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
-import developer.android.com.enlightme.objects.DebateEntity
-import kotlinx.serialization.Polymorphic
+import android.util.Log
+import developer.android.com.enlightme.Objects.DebateEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -28,14 +28,21 @@ class InsertArg : Operation {
     var side: Int
     var del_befor: List<DeleteArg>
     var del_after: List<DeleteArg>
-    override fun perform(debateEntity: DebateEntity){
+    override fun perform(debateEntity: DebateEntity): DebateEntity{
         if (this.place>=0){
             if(this.side==1){
-                debateEntity.side_1_entity.add(place,this.subDebateEntity)
+                Log.i("InsertArg", debateEntity.side_1_entity.size.toString())
+                debateEntity.side_1_entity.add(place, this.subDebateEntity, debateEntity)
+                Log.i("InsertArg", "Arg insertion")
+                Log.i("InsertArg", debateEntity.side_1_entity.size.toString())
             }else{
-                debateEntity.side_2_entity.add(place,this.subDebateEntity)
+                Log.i("InsertArg", debateEntity.side_2_entity.size.toString())
+                debateEntity.side_2_entity.add(place, this.subDebateEntity, debateEntity)
+                Log.i("InsertArg", "Arg insertion")
+                Log.i("InsertArg", debateEntity.side_2_entity.size.toString())
             }
         }
+        return debateEntity
     }
 
     companion object{

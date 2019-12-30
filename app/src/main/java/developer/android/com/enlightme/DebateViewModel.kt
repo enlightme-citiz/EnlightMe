@@ -1,20 +1,14 @@
 package developer.android.com.enlightme
 
-import android.content.Context
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.nearby.Nearby
-import com.google.android.gms.nearby.connection.Payload
-import developer.android.com.enlightme.objects.*
-import kotlinx.serialization.json.*
+import developer.android.com.enlightme.Objects.*
+import developer.android.com.enlightme.Utils.PropertyAwareMutableLiveData
 
 class DebateViewModel : ViewModel() {
     //The debate
-    val debate = MutableLiveData<Debate>()
+    val debate = PropertyAwareMutableLiveData<Debate>()
     //Attendee
-    val attendee = MutableLiveData<Attendee>()
+    val attendee = PropertyAwareMutableLiveData<Attendee>()
     //Temporary debate entity. Enable instantiating and communicating debateEntity between
     // alertDialogue and debatFragment when creating a new argument
     var temp_debate_entity = DebateEntity()

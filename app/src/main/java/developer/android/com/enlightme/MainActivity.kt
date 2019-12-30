@@ -11,9 +11,9 @@ import androidx.navigation.ui.NavigationUI
 import developer.android.com.enlightme.Debate.*
 import developer.android.com.enlightme.Debate.ConcurentOp.InsertArg
 import developer.android.com.enlightme.databinding.ActivityMainBinding
-import developer.android.com.enlightme.objects.DebateEntity
+import developer.android.com.enlightme.Objects.DebateEntity
 
-class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionListener,
+class MainActivity : AppCompatActivity(),
     ArgumentPlusSide1Fragment.OnFragmentInteractionListener,
     ArgumentPlusSide2Fragment.OnFragmentInteractionListener,
     NewArgDialogFragment.OnFragmentInteractionListener,
@@ -56,17 +56,18 @@ class MainActivity : AppCompatActivity(), MainFragment.OnFragmentInteractionList
         }else{
             val place : Int
             if(debateViewModel.temp_side == 1){
-                place = debateViewModel.debate.value?.get_debate_entity()?.side_1_entity?.size ?: -1
+                place = debateViewModel.debate.value?.getDebateEntity()?.side_1_entity?.size ?: -1
             }else{
-                place = debateViewModel.debate.value?.get_debate_entity()?.side_2_entity?.size ?: -1
+                place = debateViewModel.debate.value?.getDebateEntity()?.side_2_entity?.size ?: -1
             }
-            val currDebate = this.debateViewModel.debate.value?.get_debate_entity()
+            val currDebate = this.debateViewModel.debate.value?.getDebateEntity()
             if (currDebate != null){
-                val operation = InsertArg(debateViewModel.temp_debate_entity, place, debateViewModel.temp_side)
+                val operation = InsertArg(debateViewModel.temp_debate_entity, place,
+                    debateViewModel.temp_side)
                 debateViewModel.debate.value?.manageUserUpdate(listOf(operation), this,
-                    joinDebateViewModel.listEndpointId, joinDebateViewModel.myEndpointId, currDebate.path_to_root)
+                    joinDebateViewModel.listEndpointId, joinDebateViewModel.myEndpointId,
+                    currDebate.path_to_root)
             }
-
         }
         debateViewModel.temp_side = 0
         debateViewModel.temp_debate_entity = DebateEntity()

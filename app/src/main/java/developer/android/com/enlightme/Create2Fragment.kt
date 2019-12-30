@@ -1,20 +1,16 @@
 package developer.android.com.enlightme
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.databinding.BaseObservable
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import developer.android.com.enlightme.objects.Attendee
-import kotlinx.android.synthetic.main.fragment_debate.view.*
+import developer.android.com.enlightme.Objects.Attendee
 
 
 /**
@@ -64,7 +60,7 @@ class Create2Fragment : Fragment() {
                 //Creating attendee
                 val user = Attendee()
                 user.name = binding.pseudo.text.toString()
-                viewModel.debate.value?.listAttendees?.add(user)
+                viewModel.debate.value?.listAttendees?.add(user, viewModel.debate.value ?: BaseObservable())
                 viewModel.attendee.value = user
                 view.findNavController().navigate(R.id.action_create2Fragment_to_debateFragment)
             }

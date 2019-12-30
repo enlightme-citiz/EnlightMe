@@ -1,7 +1,5 @@
 package developer.android.com.enlightme.Debate
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -9,17 +7,17 @@ import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback
 import developer.android.com.enlightme.DebateViewModel
-import developer.android.com.enlightme.MainActivity
 import developer.android.com.enlightme.P2PClasses.P2P
 import developer.android.com.enlightme.R
 import developer.android.com.enlightme.databinding.FragmentDebateBinding
-import developer.android.com.enlightme.objects.DebateEntity
+import developer.android.com.enlightme.Objects.Debate
+import developer.android.com.enlightme.Objects.DebateEntity
 
 
 /**
@@ -58,20 +56,29 @@ class DebateFragment : Fragment() {
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-        binding.side1.text = viewModel.debate.value?.debateEntity?.side_1.toString()
-        binding.side2.text = viewModel.debate.value?.debateEntity?.side_2.toString()
-        binding.debateQuestion.setText(viewModel.debate.value?.debateEntity?.title.toString())
+        val debate: LiveData<Debate> = viewModel.debate
+        binding.side1.text = debate.value?.debateEntity?.side_1.toString()
+        binding.side2.text = debate.value?.debateEntity?.side_2.toString()
+        binding.debateQuestion.setText(debate.value?.debateEntity?.title.toString())
         this.populate_arguments()
-        // val debateFragmentObj = this.fragmentManager?.findFragmentById(this.id)
-        // activity?.run {
-        //     if(this is MainActivity){
-        //         if(debateFragmentObj is DebateFragment){
-        //             this.debateFragment = debateFragmentObj
-        //         }else{
-        //             throw IllegalArgumentException("debateFragment should be of class DebateFragment.")
-        //         }
-        //     }
-        // }
+        fun refreshView(){
+            binding.side1ArgContainer.removeAllViews()
+            binding.side2ArgContainer.removeAllViews()
+            this.populate_arguments()
+            Log.i("DebateFragment", "Debate view updated!")
+            Log.i("DebateFragment", "Side 1")
+            Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.side_1_entity?.size.toString())
+            Log.i("DebateFragment", "Side 2")
+            Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.side_2_entity?.size.toString())
+        }
+        viewModel.debate.observe(this, Observer<Debate> {
+            newDebate -> refreshView()
+            //@Override
+            //fun onChanged(){
+            //    this.onCreateView(inflater, container, savedInstanceState)
+            //    Log.i("DebateFragment", "Debate view updated!")
+            //}
+        })
         setHasOptionsMenu(true)
         return binding.root
     }

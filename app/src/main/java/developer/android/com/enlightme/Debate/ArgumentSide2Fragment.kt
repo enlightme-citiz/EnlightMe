@@ -1,7 +1,5 @@
 package developer.android.com.enlightme.Debate
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -61,8 +59,8 @@ class ArgumentSide2Fragment : Fragment() {
             // Long click listener function to edit the argument
             viewModel.temp_side = 2
             viewModel.edit_arg_pos = this.place
-            this.title = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.get(this.place)?.title
-            this.description = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.get(this.place)?.description
+            this.title = viewModel.debate.value?.getDebateEntity()?.side_2_entity?.get(this.place)?.title
+            this.description = viewModel.debate.value?.getDebateEntity()?.side_2_entity?.get(this.place)?.description
             val newArgDialogueFragment = NewArgDialogFragment.newInstance(
                 this.title ?: "",
                 this.description ?: "",

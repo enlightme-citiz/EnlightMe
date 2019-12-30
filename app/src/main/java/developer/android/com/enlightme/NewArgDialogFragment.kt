@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProviders
 import developer.android.com.enlightme.Debate.ConcurentOp.DeleteStr
 import developer.android.com.enlightme.Debate.ConcurentOp.InsertStr
 import developer.android.com.enlightme.databinding.FragmentNewArgDialogBinding
-import developer.android.com.enlightme.objects.DebateEntity
+import developer.android.com.enlightme.Objects.DebateEntity
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_TITLE = "title"
@@ -71,10 +71,10 @@ class NewArgDialogFragment : DialogFragment() {
                 // this and current_level in debate
                 var debate_entity: DebateEntity?
                 if(side==1){
-                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.get(place)
+                    debate_entity = viewModel.debate.value?.getDebateEntity()?.side_1_entity?.get(place)
 
                 }else{
-                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.get(place)
+                    debate_entity = viewModel.debate.value?.getDebateEntity()?.side_2_entity?.get(place)
                 }
                 debate_entity ?: run{
                     Log.i("NewArgDialogFragment", "Debate entity not found.")
@@ -97,10 +97,10 @@ class NewArgDialogFragment : DialogFragment() {
                 // this and current_level in debate
                 var debate_entity: DebateEntity?
                 if(side==1){
-                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_1_entity?.get(place)
+                    debate_entity = viewModel.debate.value?.getDebateEntity()?.side_1_entity?.get(place)
 
                 }else{
-                    debate_entity = viewModel.debate.value?.get_debate_entity()?.side_2_entity?.get(place)
+                    debate_entity = viewModel.debate.value?.getDebateEntity()?.side_2_entity?.get(place)
                 }
                 debate_entity ?: run{
                     Log.i("NewArgDialogFragment", "Debate entity not found.")

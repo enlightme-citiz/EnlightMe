@@ -1,7 +1,6 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
-import developer.android.com.enlightme.objects.DebateEntity
-import kotlinx.serialization.Polymorphic
+import developer.android.com.enlightme.Objects.DebateEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,7 +17,7 @@ class DeleteStr : Operation {
     var start: Int // starting position of the string to be deleted if start == -1, the operation is equivalent to the identity
     var len: Int   // length of the string to be deleted
     val target: String // title or description. This targets the string to be changed
-    override fun perform(debateEntity: DebateEntity){
+    override fun perform(debateEntity: DebateEntity): DebateEntity{
         when (target) {
             "title" -> {
                 if (start < debateEntity.title.length){
@@ -40,6 +39,7 @@ class DeleteStr : Operation {
                 throw Exception("Target cannot be confirmed")
             }
         }
+        return debateEntity
     }
     override fun forward(operation: Operation){
         if (operation is InsertStr){

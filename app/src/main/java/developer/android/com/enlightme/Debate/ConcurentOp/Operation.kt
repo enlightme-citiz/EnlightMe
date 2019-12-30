@@ -1,14 +1,13 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
-import developer.android.com.enlightme.objects.DebateEntity
-import kotlinx.serialization.Polymorphic
+import developer.android.com.enlightme.Objects.DebateEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("operation")
 abstract class Operation {
-    abstract fun perform(debateEntity: DebateEntity)
+    abstract fun perform(debateEntity: DebateEntity): DebateEntity
     abstract fun forward(operation: Operation)
     // "this" is the operation that is initially processed before operation. The new "this" and modified operation are the
     // operations that return the same intentions while being switched

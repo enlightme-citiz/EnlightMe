@@ -1,13 +1,9 @@
 package developer.android.com.enlightme
 
-import android.util.Log
-import developer.android.com.enlightme.Debate.ConcurentOp.DeleteArg
 import developer.android.com.enlightme.Debate.ConcurentOp.DeleteStr
 import developer.android.com.enlightme.Debate.ConcurentOp.InsertStr
-import developer.android.com.enlightme.objects.DebateEntity
+import developer.android.com.enlightme.Objects.DebateEntity
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).

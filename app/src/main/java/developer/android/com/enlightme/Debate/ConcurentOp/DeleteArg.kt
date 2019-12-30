@@ -1,7 +1,6 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
-import developer.android.com.enlightme.objects.DebateEntity
-import kotlinx.serialization.Polymorphic
+import developer.android.com.enlightme.Objects.DebateEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,14 +17,15 @@ class DeleteArg : Operation {
 
     var place: Int
     var side: Int
-    override fun perform(debateEntity: DebateEntity){
+    override fun perform(debateEntity: DebateEntity): DebateEntity{
         if (this.place>=0){
             if(this.side==1){
-                debateEntity.side_1_entity.removeAt(place)
+                debateEntity.side_1_entity.removeAt(place, debateEntity)
             }else{
-                debateEntity.side_2_entity.removeAt(place)
+                debateEntity.side_2_entity.removeAt(place, debateEntity)
             }
         }
+        return debateEntity
     }
     override fun forward(operation: Operation){
         if (operation is InsertArg){

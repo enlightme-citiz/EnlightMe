@@ -1,7 +1,6 @@
 package developer.android.com.enlightme.Debate.ConcurentOp
 
-import developer.android.com.enlightme.objects.DebateEntity
-import kotlinx.serialization.Polymorphic
+import developer.android.com.enlightme.Objects.DebateEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -22,7 +21,7 @@ class InsertStr : Operation {
     val target: String // title or description. This targets the string to be changed
     var del_befor: MutableList<DeleteStr>
     var del_after: MutableList<DeleteStr>
-    override fun perform(debateEntity: DebateEntity){
+    override fun perform(debateEntity: DebateEntity): DebateEntity{
         when (target) {
             "title" -> {
                 if (start < debateEntity.title.length){
@@ -45,6 +44,7 @@ class InsertStr : Operation {
                 throw Exception("Target cannot be confirmed")
             }
         }
+        return debateEntity
     }
     companion object{
         fun intersect(listOp1: List<DeleteStr>, listOp2: List<DeleteStr>): Boolean{

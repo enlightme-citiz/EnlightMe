@@ -68,9 +68,9 @@ class MainFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
-    }
+    // interface OnFragmentInteractionListener {
+    //     fun onFragmentInteraction(uri: Uri)
+    // }
 
     companion object {
         /**

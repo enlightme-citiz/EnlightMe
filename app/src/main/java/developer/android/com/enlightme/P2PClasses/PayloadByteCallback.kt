@@ -6,9 +6,8 @@ import com.google.android.gms.nearby.connection.Payload
 import com.google.android.gms.nearby.connection.PayloadCallback
 import developer.android.com.enlightme.DebateViewModel
 import developer.android.com.enlightme.JoinDebateViewModel
-import developer.android.com.enlightme.objects.Debate
-import developer.android.com.enlightme.objects.HistDebate
-import developer.android.com.enlightme.objects.UpdatePayload
+import developer.android.com.enlightme.Objects.Debate
+import developer.android.com.enlightme.Objects.UpdatePayload
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 
