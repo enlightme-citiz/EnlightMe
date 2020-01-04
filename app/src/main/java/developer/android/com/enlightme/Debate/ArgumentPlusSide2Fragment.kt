@@ -28,7 +28,6 @@ import developer.android.com.enlightme.databinding.FragmentArgumentPlusSide2Bind
  *
  */
 class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
-    private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
     private lateinit var binding: FragmentArgumentPlusSide2Binding
 
@@ -54,28 +53,6 @@ class ArgumentPlusSide2Fragment : Fragment(), View.OnClickListener {
         binding.icAddBlack24dp.background = AppCompatResources.getDrawable(requireContext(),
             R.drawable.ic_add_black_24dp)
         return binding.root
-    }
-
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
     }
 
     companion object {

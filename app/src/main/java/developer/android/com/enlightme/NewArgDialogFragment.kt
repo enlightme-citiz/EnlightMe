@@ -42,13 +42,13 @@ class NewArgDialogFragment : DialogFragment() {
     private var side:Int = -1
     private var place:Int = -1
     private lateinit var binding: FragmentNewArgDialogBinding
-    private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewModel: DebateViewModel
     private lateinit var viewModelJoin: JoinDebateViewModel
     // Use this instance of the interface to deliver action events
     internal lateinit var dialogListener: NoticeDialogListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("NewArgDialogFragment", "onCreate")
         super.onCreate(savedInstanceState)
         arguments?.let {
             title = it.getString(ARG_TITLE)
@@ -62,6 +62,7 @@ class NewArgDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i("NewArgDialogFragment", "onCreateView")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_arg_dialog, container, false)
         binding.newArgDialogTitle.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -118,22 +119,9 @@ class NewArgDialogFragment : DialogFragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
     override fun onAttach(context: Context) {
+        Log.i("NewArgDialogFragment", "onAttach")
         super.onAttach(context)
-        Log.i("NewArgDialogFragment", "onResume")
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
@@ -145,31 +133,10 @@ class NewArgDialogFragment : DialogFragment() {
                         " must implement NoticeDialogListener")
             )
         }
-
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Log.i("NewArgDialogFragment", "onResume")
-        listener = null
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        Log.i("NewArgDialogFragment", "onCreateDialog")
         viewModel = activity?.run {
             ViewModelProviders.of(this).get(DebateViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
@@ -195,13 +162,13 @@ class NewArgDialogFragment : DialogFragment() {
                         dialogView.findViewById<EditText>(R.id.new_arg_dialog_title).text.toString()
                     viewModel.temp_debate_entity.description =
                         dialogView.findViewById<EditText>(R.id.new_arg_dialog_description).text.toString()
+                    Log.i("NewArgDialogFragment", "positivebutton")
                     dialogListener.onDialogPositiveClick(this)
                 }
                 .setNegativeButton(R.string.new_arg_dialogue_cancel)
                 { dialog, id ->
                     getDialog()?.cancel()
                 }
-            Log.i("NewArgDialogFragment", "resume new arg dialog.")
             if (title != null) {
                 dialogView.findViewById<EditText>(R.id.new_arg_dialog_title)
                     .setText(title.toString(), TextView.BufferType.EDITABLE)

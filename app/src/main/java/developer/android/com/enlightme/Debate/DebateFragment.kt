@@ -60,10 +60,12 @@ class DebateFragment : Fragment() {
         binding.side1.text = debate.value?.debateEntity?.side_1.toString()
         binding.side2.text = debate.value?.debateEntity?.side_2.toString()
         binding.debateQuestion.setText(debate.value?.debateEntity?.title.toString())
-        this.populate_arguments()
+        // this.populate_arguments()
         fun refreshView(){
+            //Log.i("DebateFragment", binding.side2ArgContainer.getChildAt(0).toString())
             binding.side1ArgContainer.removeAllViews()
             binding.side2ArgContainer.removeAllViews()
+            //Log.i("DebateFragment", binding.side2ArgContainer.getChildAt(0).toString())
             this.populate_arguments()
             Log.i("DebateFragment", "Debate view updated!")
             Log.i("DebateFragment", "Side 1")
@@ -72,12 +74,7 @@ class DebateFragment : Fragment() {
             Log.i("DebateFragment", viewModel.debate.value?.debateEntity?.side_2_entity?.size.toString())
         }
         viewModel.debate.observe(this, Observer<Debate> {
-            newDebate -> refreshView()
-            //@Override
-            //fun onChanged(){
-            //    this.onCreateView(inflater, container, savedInstanceState)
-            //    Log.i("DebateFragment", "Debate view updated!")
-            //}
+            refreshView()
         })
         setHasOptionsMenu(true)
         return binding.root
@@ -123,17 +120,20 @@ class DebateFragment : Fragment() {
         //Adding the button to enable adding argument
         addArg1Frag = ArgumentPlusSide1Fragment()
         val constraintSet1 = ConstraintSet()
-        constraintSet1.connect(addArg1Frag.id, ConstraintSet.TOP, binding.side1ArgContainer.id, ConstraintSet.TOP, 10)
+        constraintSet1.connect(addArg1Frag.id, ConstraintSet.TOP, binding.side1ArgContainer.id,
+            ConstraintSet.TOP, 10)
         fragTransaction?.add(R.id.side_1_arg_container, addArg1Frag)
 
         //Adding the button to enable adding argument
         addArg2Frag = ArgumentPlusSide2Fragment()
         val constraintSet2 = ConstraintSet()
-        constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, binding.side2ArgContainer.id, ConstraintSet.TOP, 10)
+        constraintSet2.connect(addArg2Frag.id, ConstraintSet.TOP, binding.side2ArgContainer.id,
+            ConstraintSet.TOP, 10)
         fragTransaction?.add(R.id.side_2_arg_container, addArg2Frag)?.commit()
 
         // Filling side 1 with arguments
-        for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?: listOf<DebateEntity>().withIndex()){
+        for((iarg_1, args_1) in viewModel.debate.value?.debateEntity?.side_1_entity?.withIndex() ?:
+        listOf<DebateEntity>().withIndex()){
             this.addArgument(1, args_1, iarg_1, addArg1Frag.id)
         }
 

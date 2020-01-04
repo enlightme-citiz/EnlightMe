@@ -106,7 +106,7 @@ class Debate: BaseObservable(){
         Log.i("Debate", debateEntity.side_2_entity.size.toString())
     }
 
-    fun integrate(histEltOp: HistElt, path_to_root: LiveMutableList<LiveMutableList<Int>>){
+    fun integrate(histEltOp: HistElt, path_to_root: LiveMutableList<LiveMutableList<Int>>): DebateEntity{
         // Getting the local debate
         val thisDebate = getDebateEntity(path_to_root)
         //TODO check for loop boundaries
@@ -114,13 +114,14 @@ class Debate: BaseObservable(){
         for (i in n1..thisDebate.hist_debate.histEltList.size-1){
             histEltOp.operation.forward(thisDebate.hist_debate.histEltList[i].operation)
         }
-        histEltOp.operation.perform(thisDebate)
-        thisDebate.hist_debate.histEltList.add(histEltOp)
-        if (thisDebate.state_vector[histEltOp.id_author] != null){
-            thisDebate.state_vector[histEltOp.id_author] = thisDebate.state_vector[histEltOp.id_author]!! + 1
+        val newDebateEntity = histEltOp.operation.perform(thisDebate)
+        newDebateEntity.hist_debate.histEltList.add(histEltOp)
+        if (newDebateEntity.state_vector[histEltOp.id_author] != null){
+            newDebateEntity.state_vector[histEltOp.id_author] = newDebateEntity.state_vector[histEltOp.id_author]!! + 1
         }else{
-            thisDebate.state_vector[histEltOp.id_author] = 1
+            newDebateEntity.state_vector[histEltOp.id_author] = 1
         }
+        return newDebateEntity
     }
 
     fun updateEndpointId(oldIdAuthor: String, newIdAuthor: String){
@@ -148,22 +149,28 @@ class Debate: BaseObservable(){
         // Getting the local debate
         val thisDebate = getDebateEntity(updatePayload.path_to_root)
         // Check if no preceding operation are missing
-        val histEltOp: HistElt = updatePayload.hist_elt
-        val stateVectorOp: MutableMap<String, Int> = histEltOp.state_vector
+        var histEltOp: HistElt = updatePayload.hist_elt
+        var stateVectorOp: MutableMap<String, Int> = histEltOp.state_vector
         var nbChangeToApply = thisDebate.updateWaitingList.size+1
         if(thisDebate.updateShouldWait(stateVectorOp)){
-            thisDebate.updateWaitingList = thisDebate.updateWaitingList.plus(updatePayload)
+            Log.i("Debate", "Update should wait")
+            thisDebate.updateWaitingList.add(updatePayload)
             nbChangeToApply -= 1 // To not try to apply this update that should still wait for a new update.
         }
         if (nbChangeToApply == thisDebate.updateWaitingList.size+1){
+            Log.i("Debate", "Update don't wait")
             // No update are missing. updatePayload can be treated first in the list of updateWaitingList
-            thisDebate.updateWaitingList = listOf(updatePayload) + thisDebate.updateWaitingList
+            thisDebate.updateWaitingList.add(0, updatePayload)
         }
-        for (i in 0..nbChangeToApply){
+        val indexToRemove = mutableListOf<Int>()
+        for (i in 0 until(nbChangeToApply)){
+            Log.i("Debate - i", i.toString())
+            histEltOp = thisDebate.updateWaitingList[i].hist_elt
+            stateVectorOp = histEltOp.state_vector
             if(!thisDebate.updateShouldWait(stateVectorOp)){
                 // For each update in waiting list do
                 // Integrate in the history
-                integrate(histEltOp, thisDebate.path_to_root)
+                val newDebateEntity = integrate(histEltOp, thisDebate.path_to_root)
                 // Update state_vector
                 if (!(id_author in thisDebate.state_vector)){
                     thisDebate.state_vector[id_author] = 1
@@ -172,10 +179,16 @@ class Debate: BaseObservable(){
                 }
                 // Apply changes
                 Log.i("Debate", "perform")
-                val newDebateEntity = histEltOp.operation.perform(thisDebate)
+                //val newDebateEntity = histEltOp.operation.perform(thisDebate)
                 setDebateEntity(updatePayload.path_to_root, newDebateEntity)
+                indexToRemove.add(i)
             }
         }
+        indexToRemove.reverse()
+        for(i in indexToRemove){
+            thisDebate.updateWaitingList.removeAt(i)
+        }
+        Log.i("Debate", "manageOthersUpdate")
     }
     fun manageUserUpdate(listOperation: List<Operation>,
                          context: Context,
@@ -193,5 +206,6 @@ class Debate: BaseObservable(){
             val updatePayload = UpdatePayload(histElt, path_to_root)
             manageOthersUpdate(updatePayload, id_author)
         }
+        Log.i("Debate", "manageUserUpdate")
     }
 }

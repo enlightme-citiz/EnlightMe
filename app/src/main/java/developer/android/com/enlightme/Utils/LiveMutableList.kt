@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class LiveMutableList<T>: MutableList<T> by mutableListOf() {
+    //var iteration = 0
     fun add(element: T, baseObservable: @Polymorphic BaseObservable): Boolean {
         baseObservable.notifyChange()
         Log.i("LiveMutableList", "LiveMutableList add function")
@@ -16,6 +17,11 @@ class LiveMutableList<T>: MutableList<T> by mutableListOf() {
 
     fun add(index: Int, element: T, baseObservable: @Polymorphic BaseObservable) {
         baseObservable.notifyChange()
+        Log.i("LiveMutableList", "LiveMutableList add function with index")
+        //if(iteration>0){
+        //    throw Exception("Not good in here")
+        //}
+        //iteration += 1
         this.add(index, element)
     }
 
@@ -27,10 +33,5 @@ class LiveMutableList<T>: MutableList<T> by mutableListOf() {
     fun remove(element: T, baseObservable: @Polymorphic BaseObservable): Boolean {
         baseObservable.notifyChange()
         return this.remove(element)
-    }
-
-    override fun remove(element: T): Boolean {
-        throw Exception("Add method should be called using baseObservable as add(index: Int, " +
-                "element: T, baseObservable: BaseObservable).")
     }
 }

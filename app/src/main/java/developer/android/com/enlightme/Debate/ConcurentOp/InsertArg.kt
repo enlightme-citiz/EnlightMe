@@ -33,12 +33,13 @@ class InsertArg : Operation {
             if(this.side==1){
                 Log.i("InsertArg", debateEntity.side_1_entity.size.toString())
                 debateEntity.side_1_entity.add(place, this.subDebateEntity, debateEntity)
-                Log.i("InsertArg", "Arg insertion")
+                Log.i("InsertArg", "Arg insertion side 1")
+                Exception("Print stack trace").printStackTrace()
                 Log.i("InsertArg", debateEntity.side_1_entity.size.toString())
             }else{
                 Log.i("InsertArg", debateEntity.side_2_entity.size.toString())
                 debateEntity.side_2_entity.add(place, this.subDebateEntity, debateEntity)
-                Log.i("InsertArg", "Arg insertion")
+                Log.i("InsertArg", "Arg insertion side 2")
                 Log.i("InsertArg", debateEntity.side_2_entity.size.toString())
             }
         }
